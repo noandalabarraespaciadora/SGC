@@ -228,36 +228,50 @@ class AuthController extends BaseController
         }
 
         $usuarioId = $this->session->get('usuario_id');
-        $usuario = $this->usuarioModel->find($usuarioId);
 
-        if (!$usuario) {
-            return redirect()->to('/dashboard')->with('error', 'Usuario no encontrado.');
-        }
-
+        // Validación básica
         $rules = [
             'nombre' => 'required|min_length[2]|max_length[100]',
             'apellido' => 'required|min_length[2]|max_length[100]',
-            'alias' => "required|min_length[3]|max_length[50]|is_unique[usuarios.alias,id,{$usuarioId}]",
+            'alias' => 'required|min_length[3]|max_length[50]',
             'telefono' => 'permit_empty|min_length[8]|max_length[20]',
             'direccion' => 'permit_empty|max_length[500]'
         ];
 
-        // Validar datos básicos
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         }
 
+        // Obtener datos
+        $nuevoAlias = $this->request->getPost('alias');
+
+        // Verificar si el alias ya existe (excluyendo al usuario actual)
+        $db = \Config\Database::connect();
+        $builder = $db->table('usuarios');
+        $builder->where('alias', $nuevoAlias);
+        $builder->where('id !=', $usuarioId);
+        $aliasExistente = $builder->get()->getRow();
+
+        if ($aliasExistente) {
+            return redirect()->back()->withInput()->with('error', 'Este alias ya está en uso. Por favor elige otro.');
+        }
+
+        // Preparar datos para actualizar
         $data = [
-            'id' => $usuarioId,
             'nombre' => $this->request->getPost('nombre'),
             'apellido' => $this->request->getPost('apellido'),
-            'alias' => $this->request->getPost('alias'),
+            'alias' => $nuevoAlias,
             'telefono' => $this->request->getPost('telefono'),
-            'direccion' => $this->request->getPost('direccion')
+            'direccion' => $this->request->getPost('direccion'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
-        // Guardar datos básicos
-        if ($this->usuarioModel->save($data)) {
+        // Actualizar en la base de datos
+        $builder = $db->table('usuarios');
+        $builder->where('id', $usuarioId);
+        $result = $builder->update($data);
+
+        if ($result) {
             // Actualizar datos de sesión
             $this->session->set([
                 'usuario_nombre' => $data['nombre'],
@@ -270,7 +284,6 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Error al actualizar el perfil.');
         }
     }
-
     public function cambiarPassword()
     {
         if (!$this->session->get('logged_in')) {

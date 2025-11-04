@@ -6,49 +6,33 @@ use CodeIgniter\Model;
 
 class UsuarioModel extends Model
 {
-    protected $table            = 'usuarios';
-    protected $primaryKey       = 'id';
+    protected $table = 'usuarios';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [
-        'nombre', 
-        'apellido', 
-        'alias', 
-        'direccion', 
-        'email', 
-        'telefono', 
-        'password', 
-        'nivel',
-        'activo'
-    ];
-
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
+    protected $returnType = 'array';
+    protected $useSoftDeletes = false;
+    protected $protectFields = true;
+    protected $allowedFields = ['nombre', 'apellido', 'alias', 'direccion', 'email', 'telefono', 'password', 'nivel', 'activo'];
 
     // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $useTimestamps = true;
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
-    // Validation
-    protected $validationRules      = [
-        'nombre'    => 'required|min_length[2]|max_length[100]',
-        'apellido'  => 'required|min_length[2]|max_length[100]',
-        'alias'     => 'required|min_length[3]|max_length[50]|is_unique[usuarios.alias]',
-        'email'     => 'required|valid_email|is_unique[usuarios.email]',
-        'telefono'  => 'permit_empty|min_length[8]|max_length[20]',
+    // Validation - SOLO para inserción
+    protected $validationRules = [
+        'nombre' => 'required|min_length[2]|max_length[100]',
+        'apellido' => 'required|min_length[2]|max_length[100]',
+        'alias' => 'required|min_length[3]|max_length[50]|is_unique[usuarios.alias]',
+        'email' => 'required|valid_email|is_unique[usuarios.email]',
+        'telefono' => 'permit_empty|min_length[8]|max_length[20]',
         'direccion' => 'permit_empty|max_length[500]',
-        'password'  => 'required|min_length[8]',
-        'nivel'     => 'required|in_list[usuario,sistema]'
+        'password' => 'required|min_length[8]',
+        'nivel' => 'required|in_list[usuario,sistema]'
     ];
-    protected $validationMessages   = [
+
+    protected $validationMessages = [
         'alias' => [
             'is_unique' => 'Este alias ya está en uso. Por favor elige otro.'
         ],
@@ -56,40 +40,29 @@ class UsuarioModel extends Model
             'is_unique' => 'Este email ya está registrado.'
         ]
     ];
-    protected $skipValidation       = false;
+
+    protected $skipValidation = false;
     protected $cleanValidationRules = true;
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['hashPassword', 'setDefaultNivel'];
-    protected $afterInsert    = ['hashPassword'];
-    protected $beforeUpdate   = ['hashPasswordIfChanged'];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
-
-    
-    // Y agrega este nuevo método callback:
-    protected function hashPasswordIfChanged(array $data)
-    {
-        // Solo hashear la contraseña si está presente en los datos
-        if (isset($data['data']['password']) && !empty($data['data']['password'])) {
-            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
-        } else {
-            // Si no hay password, removerlo para no validarlo
-            unset($data['data']['password']);
-        }
-        return $data;
-    }
-
+    protected $beforeInsert = ['hashPassword', 'setDefaultNivel'];
+    protected $beforeUpdate = ['hashPasswordIfChanged'];
 
     protected function hashPassword(array $data)
     {
         if (isset($data['data']['password']) && !empty($data['data']['password'])) {
             $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+        }
+        return $data;
+    }
+
+    protected function hashPasswordIfChanged(array $data)
+    {
+        if (isset($data['data']['password']) && !empty($data['data']['password'])) {
+            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
         } else {
+            // Si no se está cambiando la contraseña, removerla de los datos
             unset($data['data']['password']);
         }
         return $data;
@@ -105,14 +78,23 @@ class UsuarioModel extends Model
 
     public function verificarUsuario($email, $password)
     {
-        $usuario = $this->where('email', $email)
-                        ->where('activo', 1)
-                        ->first();
-        
+        $usuario = $this->where('email', $email)->where('activo', 1)->first();
+
         if ($usuario && password_verify($password, $usuario['password'])) {
             return $usuario;
         }
-        
+
+        return false;
+    }
+
+    public function verificarPassword($usuarioId, $passwordActual)
+    {
+        $usuario = $this->find($usuarioId);
+
+        if ($usuario && password_verify($passwordActual, $usuario['password'])) {
+            return true;
+        }
+
         return false;
     }
 
@@ -131,15 +113,11 @@ class UsuarioModel extends Model
         return $this->where('alias', $alias)->first();
     }
 
-    public function verificarPassword($usuarioId, $passwordActual)
+    // MÉTODO SOBREESCRITO PARA ACTUALIZACIÓN - CLAVE PARA SOLUCIONAR EL PROBLEMA
+    public function update($id = null, $data = null): bool
     {
-        $usuario = $this->find($usuarioId);
-        
-        if ($usuario && password_verify($passwordActual, $usuario['password'])) {
-            return true;
-        }
-        
-        return false;
+        // Para actualizaciones, no usar las validaciones por defecto
+        $this->skipValidation(false);
+        return parent::update($id, $data);
     }
-
 }
