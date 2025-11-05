@@ -1,0 +1,335 @@
+/* ===========================================================
+   Azia → shadcn facelift
+   =========================================================== */
+
+/* ---------- CSS Variables (puedes cambiar aquí) ---------- */
+:root {
+  /* tipografía */
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "Fira Code", "Roboto Mono", monospace;
+
+  /* colores (modo claro) */
+  --background: 0 0% 100%; /* #ffffff */
+  --foreground: 222 47% 11%; /* #0f172a */
+
+  --muted: 210 40% 96%; /* #f1f5f9 */
+  --muted-foreground: 215 16% 47%; /* #64748b */
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --border: 214 32% 91%; /* #e2e8f0 */
+  --input: 214 32% 91%;
+
+  --primary: 221 83% 53%; /* #3b82f6 */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+
+  --accent: 210 40% 96%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%; /* #ef4444 */
+  --destructive-foreground: 210 40% 98%;
+
+  --ring: 221 83% 53%;
+
+  /* bordes / sombras */
+  --radius: 0.5rem; /* 8px */
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* ---------- Dark mode (prefiere-color-oscuro) ---------- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: 222 47% 11%; /* #0f172a */
+    --foreground: 210 40% 98%;
+
+    --muted: 217 33% 18%; /* #1e293b */
+    --muted-foreground: 215 16% 65%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+
+    --primary: 217 91% 60%; /* #60a5fa */
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217 33% 18%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 217 91% 60%;
+  }
+}
+
+/* ---------- Reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- Botones (btn) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s,
+    box-shadow 0.15s;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* colores de botones */
+.btn-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+.btn-primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.btn-secondary {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border-color: hsl(var(--border));
+}
+.btn-secondary:hover {
+  background-color: hsl(var(--accent));
+}
+
+.btn-destructive {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+.btn-destructive:hover {
+  background-color: hsl(var(--destructive) / 0.9);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: hsl(var(--primary));
+  border-color: hsl(var(--border));
+}
+.btn-outline:hover {
+  background-color: hsl(var(--accent));
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+}
+.btn-ghost:hover {
+  background-color: hsl(var(--accent));
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+}
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header,
+.card-footer {
+  padding: 1rem 1.25rem;
+  background-color: hsl(var(--muted));
+}
+.card-body {
+  padding: 1.25rem;
+}
+.card-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+
+/* ---------- Formularios ---------- */
+.form-control,
+.form-select,
+.form-file {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-control:focus,
+.form-select:focus,
+.form-file:focus {
+  border-color: hsl(var(--ring));
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.4);
+}
+.form-control::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+/* ---------- Tablas ---------- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.table thead th {
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Navs / Pills ---------- */
+.nav-pills .nav-link {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  border-radius: var(--radius);
+}
+.nav-pills .nav-link:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--accent));
+}
+.nav-pills .nav-link.active {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* ---------- Sombras helpers ---------- */
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.shadow {
+  box-shadow: var(--shadow);
+}
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------- Redondeo ---------- */
+.rounded-sm {
+  border-radius: calc(var(--radius) - 2px);
+}
+.rounded {
+  border-radius: var(--radius);
+}
+.rounded-lg {
+  border-radius: calc(var(--radius) + 2px);
+}
+
+/* ---------- Ejemplo: badge ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+/* ---------- Utilidades rápidas ---------- */
+.bg-background {
+  background-color: hsl(var(--background));
+}
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+.border-border {
+  border-color: hsl(var(--border));
+}
+
+/* ===========================================================
+   Fin del facelift
+   =========================================================== */
+
+
+   /* Helpers rápidos para no tocar BS5 */
+.table-dashboard th,
+.table-dashboard td {
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .table-dashboard th,
+  .table-dashboard td {
+    white-space: normal;
+  }
+}
+
+/* evita que cards flex interno se rompa */
+.card-dashboard-one,
+.card-dashboard-two,
+.card-dashboard-three {
+  min-width: 0;
+}
+
+/* títulos responsivos */
+.fs-6 { font-size: 0.875rem !important; }
+@media (min-width: 768px) {
+  .fs-md-5 { font-size: 1.125rem !important; }
+}

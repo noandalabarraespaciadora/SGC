@@ -36,7 +36,7 @@ class AuthController extends BaseController
         }
 
         $data = [
-            'titulo' => 'Iniciar Sesión - Sistema'
+            'titulo' => 'Iniciar Sesión - SGC'
         ];
 
         return view('auth/login', $data);
