@@ -8,9 +8,6 @@ $routes->get('/login', 'AuthController::login');
 $routes->get('/register', 'AuthController::register');
 $routes->get('/logout', 'AuthController::logout');
 
-//test
-$routes->get('/test_login', 'TestController::index');
-
 // Autenticación
 $routes->group('auth', function ($routes) {
     $routes->post('procesar-login', 'AuthController::procesarLogin');

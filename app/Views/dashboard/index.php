@@ -1,152 +1,115 @@
-<?php
-$data['navbar'] = true;
-?>
-<?= $this->include('templates/header', $data) ?>
+<?php $this->extend('layouts/main') ?>
 
-<!-- Mensajes de alerta -->
+<?php $this->section('content') ?>
+<!-- Mensajes flash (opcional) -->
 <?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show mt-3">
-        <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+  <div class="alert alert-success alert-dismissible fade show"><?= session()->getFlashdata('success') ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
 <?php endif; ?>
-
 <?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger alert-dismissible fade show mt-3">
-        <i class="fas fa-exclamation-circle"></i> <?= session()->getFlashdata('error') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+  <div class="alert alert-danger alert-dismissible fade show"><?= session()->getFlashdata('error') ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
 <?php endif; ?>
 
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="user-info">
-            <div class="row">
-                <div class="col-md-8">
-                    <h3><i class="fas fa-user-shield"></i> Bienvenido al Sistema</h3>
-                    <h4><?= $usuario_nombre ?> <?= $usuario_apellido ?></h4>
-                    <p class="mb-0">
-                        <strong>Alias:</strong> <?= $usuario_alias ?> | 
-                        <strong>Nivel:</strong> 
-                        <span class="badge bg-<?= $usuario_nivel === 'sistema' ? 'warning' : 'info' ?>">
-                            <?= ucfirst($usuario_nivel) ?>
-                        </span>
-                    </p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <i class="fas fa-shield-alt fa-5x opacity-75"></i>
-                </div>
-            </div>
-        </div>
+<!-- Título -->
+<div class="az-dashboard-one-title">
+  <div>
+    <h2 class="az-dashboard-title">👋 Hola! <b><?= esc($usuario_nombre) ?></b></h2>
+    <p class="az-dashboard-text">Que tengas una excelente jornada laboral!! 😄</p>
+  </div>
+  <div class="az-content-header-right">
+    <div class="media">
+      <div class="media-body">
+        <label><?= date('l') ?></label>   <!-- Día semana -->
+        <h6><?= date('d') . ' de ' . date('F') . ' de ' . date('Y') ?></h6>
+      </div>
     </div>
+  </div>
 </div>
+<hr>
 
-<div class="row mt-4">
-    <!-- Tarjeta de Estadísticas -->
-    <div class="col-md-4">
-        <div class="card stats-card bg-primary text-white">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-8">
-                        <h5>Usuarios Totales</h5>
-                        <h2><?= $total_usuarios ?></h2>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-users fa-3x"></i>
-                    </div>
-                </div>
-            </div>
+<!-- =======  DASHBOARD RESPONSIVO  ======= -->
+<div class="row g-3 g-lg-4">
+  <!-- IZQUIERDA: Concursos -->
+  <div class="col-12 col-lg-7 order-1 order-lg-1">
+    <div class="card shadow-sm h-100">
+      <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start gap-2">
+        <div>
+          <h6 class="card-title fs-6 fs-md-5 mb-1">🏆 Concursos</h6>
+          <p class="text-muted small mb-0">Consulte los últimos concursos registrados.</p>
         </div>
-    </div>
+        <a href="#" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos los concursos</a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-dashboard align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="text-nowrap">Expte</th>
+                <th class="text-nowrap">Nombre</th>
+                <th class="text-nowrap">Estado</th>
+                <th class="text-nowrap text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
 
-    <div class="col-md-4">
-        <div class="card stats-card bg-success text-white">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-8">
-                        <h5>Mi Nivel</h5>
-                        <h2><?= ucfirst($usuario_nivel) ?></h2>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-user-tag fa-3x"></i>
-                    </div>
-                </div>
-            </div>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
+  </div><!-- /col concursos -->
 
-    <div class="col-md-4">
-        <div class="card stats-card bg-info text-white">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-8">
-                        <h5>Mi Alias</h5>
-                        <h4><?= $usuario_alias ?></h4>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-at fa-3x"></i>
-                    </div>
-                </div>
+  <!-- DERECHA: Gráficos + Importante -->
+  <div class="col-12 col-lg-5 order-2 order-lg-2">
+    <div class="row g-3">
+      <!-- Docente -->
+      <div class="col-12 col-sm-6 col-lg-12">
+        <div class="card shadow-sm h-100">
+          <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start gap-2">
+            <div>
+              <h6 class="card-title fs-6 fs-md-5 mb-1">🏆 Docente</h6>
+              <p class="text-muted small mb-0">Resumen de docentes.</p>
             </div>
+            <a href="#" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos</a>
+          </div>
+          <div class="card-body">
+            <div id="flotChart1" class="flot-chart d-flex justify-content-center align-items-center text-muted" style="height:150px;">
+              Gráfico de Docentes
+            </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-info-circle"></i> Información de tu Cuenta</h5>
+      <!-- Postulantes -->
+      <div class="col-12 col-sm-6 col-lg-12">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <h6 class="card-title fs-6 fs-md-5 mb-1">Postulantes <i class="icon ion-md-trending-down tx-danger"></i> <small>0.86 %</small></h6>
+            <p class="text-muted small mb-0">Total Users</p>
+          </div>
+          <div class="card-body">
+            <div id="flotChart2" class="flot-chart d-flex justify-content-center align-items-center text-muted" style="height:150px;">
+              Gráfico de Postulantes
             </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th>Nombre Completo:</th>
-                        <td><?= $usuario_nombre ?> <?= $usuario_apellido ?></td>
-                    </tr>
-                    <tr>
-                        <th>Email:</th>
-                        <td><?= $usuario_email ?></td>
-                    </tr>
-                    <tr>
-                        <th>Alias:</th>
-                        <td><?= $usuario_alias ?></td>
-                    </tr>
-                    <tr>
-                        <th>Nivel:</th>
-                        <td>
-                            <span class="badge bg-<?= $usuario_nivel === 'sistema' ? 'warning' : 'info' ?>">
-                                <?= ucfirst($usuario_nivel) ?>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-rocket"></i> Acciones Rápidas</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="<?= base_url('/perfil') ?>" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-user-edit"></i> Editar Mi Perfil
-                    </a>
-                    <?php if ($usuario_nivel === 'sistema'): ?>
-                    <a href="<?= base_url('/dashboard/usuarios') ?>" class="btn btn-outline-warning btn-lg">
-                        <i class="fas fa-users-cog"></i> Administrar Usuarios
-                    </a>
-                    <?php endif; ?>
-                    <a href="<?= base_url('/logout') ?>" class="btn btn-outline-danger btn-lg">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                    </a>
-                </div>
-            </div>
+      <!-- Importante -->
+      <div class="col-12">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <p class="mb-0 fw-semibold">📅 Importante</p>
+          </div>
+          <div class="card-body d-flex align-items-center">
+            <p class="mb-0 text-muted">No hay actividades registradas para hoy</p>
+          </div>
         </div>
-    </div>
-</div>
-
-<?= $this->include('templates/footer') ?>
+      </div>
+    </div><!-- /row anidado -->
+  </div><!-- /col derecha -->
+</div><!-- /row principal -->
+<?php $this->endSection() ?>
