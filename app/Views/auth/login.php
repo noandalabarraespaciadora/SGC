@@ -17,17 +17,23 @@
 
     <!-- Columna derecha (formulario) -->
     <div class="az-column-signup d-flex flex-column justify-content-center align-items-center">
-        <div class="az-signup-header">
+        <div class="az-signup-header" style="width: 100%; max-width: 400px;">
             <h2>Inicio de Sesión</h2>
             <h5 class="text-muted">Ingresa tus credenciales para continuar.</h5>
 
             <!-- Mensajes flash / errores -->
             <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                <div class="alert alert-success alert-dismissible fade show">
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             <?php endif; ?>
 
             <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             <?php endif; ?>
 
             <?php if (isset($errors) && $errors): ?>
@@ -44,21 +50,38 @@
             <form action="<?= base_url('auth/procesar-login') ?>" method="post">
                 <?= csrf_field() ?>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Email</label>
-                    <input type="email" name="email" class="form-control" value="<?= old('email') ?>" required>
+                    <input type="email" name="email" class="form-control" value="<?= old('email') ?>" 
+                           placeholder="tu@email.com" required>
                 </div>
-                <div class="form-group">
+                
+                <div class="form-group mb-3">
                     <label>Contraseña</label>
-                    <input type="password" name="password" class="form-control" required>
+                    <input type="password" name="password" class="form-control" 
+                           placeholder="Ingresa tu contraseña" required>
                 </div>
 
-                <button type="submit" class="btn btn-az-primary btn-block">Ingresar</button>
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember">
+                        <label class="form-check-label" for="remember">
+                            Recordar sesión
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-az-primary btn-block w-100 mb-3">Ingresar</button>
+                
+                <div class="text-center">
+                    <a href="<?= base_url('recuperar-password') ?>" class="text-muted">
+                        <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
             </form>
         </div><!-- az-signup-header -->
 
-        <div class="az-signup-footer">
-            <br>
+        <div class="az-signup-footer mt-4">
             <p>¿No tenes una cuenta de usuario? <a href="<?= base_url('register') ?>">Click acá</a> para registrarte</p>
         </div>
     </div><!-- az-column-signup -->
