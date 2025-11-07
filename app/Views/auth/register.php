@@ -1,112 +1,153 @@
-<?= $this->include('templates/header') ?>
+<?= view('partials/header_login') ?>
 
-<div class="auth-container">
-    <h2 class="text-center mb-4">
-        <i class="fas fa-user-plus"></i> Registrarse
-    </h2>
-    
-    <!-- Mensajes de alerta -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show">
-            <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="az-signup-wrapper">
+    <!-- Columna izquierda (logo + título) -->
+    <div class="az-column-signup-left">
+        <div class="az-signup-header">
+            <i class="typcn typcn-location-arrow-outline"></i>
+            <h1>SGC<span></span></h1>
+            <h2>Sistema de Gestión de Concursos</h2>
+            <h5 class="text-muted">
+                Dirección General de Tecnología<br>
+                Consejo de la Magistratura y Jurado de Enjuiciamiento<br>
+                Provincia del Chaco
+            </h5>
         </div>
-    <?php endif; ?>
-    
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show">
-            <i class="fas fa-exclamation-circle"></i> <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
-    
-    <?php if (isset($errors)): ?>
-        <div class="alert alert-danger alert-dismissible fade show">
-            <i class="fas fa-exclamation-triangle"></i> Errores de validación:
-            <ul class="mb-0 mt-2">
-                <?php foreach ($errors as $error): ?>
-                    <li><?= $error ?></li>
-                <?php endforeach; ?>
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
+    </div><!-- az-column-signup-left -->
 
-    <form action="<?= base_url('auth/procesar-registro') ?>" method="post">
-        <?= csrf_field() ?>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre *</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" 
-                           value="<?= old('nombre') ?>" required>
+    <!-- Columna derecha (formulario) -->
+    <div class="az-column-signup d-flex flex-column justify-content-center align-items-center">
+        <div class="az-signup-header">
+            <h2>Registro de Usuario</h2>
+            <h5 class="text-muted">Completa tus datos para crear una cuenta.</h5>
+
+            <!-- Mensajes flash / errores -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+            <?php endif; ?>
+
+            <?php if (isset($errors) && $errors): ?>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <?php foreach ($errors as $e): ?>
+                            <li><?= $e ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="apellido" class="form-label">Apellido *</label>
-                    <input type="text" class="form-control" id="apellido" name="apellido" 
-                           value="<?= old('apellido') ?>" required>
-                </div>
-            </div>
-        </div>
+            <?php endif; ?>
 
-        <div class="mb-3">
-            <label for="alias" class="form-label">Alias *</label>
-            <input type="text" class="form-control" id="alias" name="alias" 
-                   value="<?= old('alias') ?>" required>
-            <div class="form-text">Nombre de usuario único para el sistema</div>
-        </div>
-        
-        <div class="mb-3">
-            <label for="email" class="form-label">Email *</label>
-            <input type="email" class="form-control" id="email" name="email" 
-                   value="<?= old('email') ?>" required>
-        </div>
+            <!-- Formulario -->
+            <form action="<?= base_url('auth/procesar-registro') ?>" method="post">
+                <?= csrf_field() ?>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="tel" class="form-control" id="telefono" name="telefono" 
-                           value="<?= old('telefono') ?>">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Apellido *</label>
+                            <input type="text" name="apellido" class="form-control" value="<?= old('apellido') ?>" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Nombre *</label>
+                            <input type="text" name="nombre" class="form-control" value="<?= old('nombre') ?>" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="mb-3">
-            <label for="direccion" class="form-label">Dirección</label>
-            <textarea class="form-control" id="direccion" name="direccion" 
-                      rows="3"><?= old('direccion') ?></textarea>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña *</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    <div class="form-text">Mínimo 8 caracteres</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Alias *</label>
+                            <input type="text" name="alias" class="form-control" value="<?= old('alias') ?>" required>
+                            <small class="text-muted">Nombre de usuario único</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>DNI</label>
+                            <input type="text" name="dni" class="form-control" value="<?= old('dni') ?>" maxlength="10">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="confirm_password" class="form-label">Confirmar Contraseña *</label>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                </div>
-            </div>
-        </div>
-        
-        <button type="submit" class="btn btn-primary w-100 btn-lg">
-            <i class="fas fa-user-plus"></i> Registrarse
-        </button>
-    </form>
-    
-    <div class="text-center mt-3">
-        <a href="<?= base_url('login') ?>">
-            <i class="fas fa-sign-in-alt"></i> ¿Ya tienes cuenta? Inicia Sesión
-        </a>
-    </div>
-</div>
 
-<?= $this->include('templates/footer') ?>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" class="form-control" value="<?= old('email') ?>" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Fecha de Nacimiento</label>
+                            <input type="date" name="fecha_nacimiento" class="form-control" value="<?= old('fecha_nacimiento') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" name="telefono" class="form-control" value="<?= old('telefono') ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input type="text" name="direccion" class="form-control" value="<?= old('direccion') ?>">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Cargo Actual</label>
+                            <input type="text" name="cargo_actual" class="form-control" value="<?= old('cargo_actual') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Dependencia</label>
+                            <input type="text" name="dependencia" class="form-control" value="<?= old('dependencia') ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Contraseña *</label>
+                            <input type="password" name="password" class="form-control" required minlength="8">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Confirmar Contraseña *</label>
+                            <input type="password" name="confirm_password" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" required id="terminos">
+                        <label class="form-check-label" for="terminos">
+                            Acepto los términos y condiciones
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-az-primary btn-block">Registrarse</button>
+            </form>
+        </div><!-- az-signup-header -->
+
+        <div class="az-signup-footer">
+            <br>
+            <p>¿Ya tienes una cuenta? <a href="<?= base_url('login') ?>">Inicia sesión aquí</a></p>
+        </div>
+    </div><!-- az-column-signup -->
+</div><!-- az-signup-wrapper -->
+
+<?= view('partials/footer_login') ?>

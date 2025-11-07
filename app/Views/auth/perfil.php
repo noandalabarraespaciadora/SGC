@@ -1,367 +1,216 @@
-<?php
-$data['navbar'] = true;
-?>
-<?= $this->include('templates/header', $data) ?>
+<?php $this->extend('layouts/main') ?>
 
-<!-- Mensajes de alerta generales -->
-<?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show mt-3">
-        <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger alert-dismissible fade show mt-3">
-        <i class="fas fa-exclamation-circle"></i> <?= session()->getFlashdata('error') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<?php endif; ?>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <!-- Información del Usuario -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
-                    <i class="fas fa-user-circle"></i> Información de Mi Perfil
-                </h4>
+<?php $this->section('content') ?>
+<div class="az-content-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="az-dashboard-one-title">
+                <div>
+                    <h2 class="az-dashboard-title">👤 Mi Perfil</h2>
+                    <p class="az-dashboard-text">Gestiona tu información personal</p>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <table class="table table-borderless">
-                            <tr>
-                                <th width="30%">Nombre Completo:</th>
-                                <td><?= $usuario['nombre'] ?> <?= $usuario['apellido'] ?></td>
-                            </tr>
-                            <tr>
-                                <th>Alias:</th>
-                                <td><span class="badge bg-secondary"><?= $usuario['alias'] ?></span></td>
-                            </tr>
-                            <tr>
-                                <th>Email:</th>
-                                <td><?= $usuario['email'] ?></td>
-                            </tr>
-                            <tr>
-                                <th>Teléfono:</th>
-                                <td><?= $usuario['telefono'] ?: '<span class="text-muted">No especificado</span>' ?></td>
-                            </tr>
-                            <tr>
-                                <th>Nivel:</th>
-                                <td>
-                                    <span class="badge bg-<?= $usuario['nivel'] === 'sistema' ? 'warning' : 'info' ?>">
-                                        <?= ucfirst($usuario['nivel']) ?>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Estado:</th>
-                                <td>
-                                    <span class="badge bg-<?= $usuario['activo'] ? 'success' : 'danger' ?>">
-                                        <?= $usuario['activo'] ? 'Activo' : 'Inactivo' ?>
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
+
+            <!-- Mensajes flash -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show">
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <div class="row">
+                <!-- Información Personal -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">📝 Información Personal</h6>
+                        </div>
+                        <div class="card-body">
+                            <form action="<?= base_url('perfil/actualizar') ?>" method="post">
+                                <?= csrf_field() ?>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Apellido *</label>
+                                            <input type="text" name="apellido" class="form-control" 
+                                                   value="<?= old('apellido', $usuario['apellido']) ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Nombre *</label>
+                                            <input type="text" name="nombre" class="form-control" 
+                                                   value="<?= old('nombre', $usuario['nombre']) ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Alias *</label>
+                                            <input type="text" name="alias" class="form-control" 
+                                                   value="<?= old('alias', $usuario['alias']) ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>DNI</label>
+                                            <input type="text" name="dni" class="form-control" 
+                                                   value="<?= old('dni', $usuario['dni']) ?>" maxlength="10">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Email *</label>
+                                    <input type="email" class="form-control" value="<?= $usuario['email'] ?>" readonly>
+                                    <small class="text-muted">El email no puede ser modificado</small>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Fecha de Nacimiento</label>
+                                            <input type="date" name="fecha_nacimiento" class="form-control" 
+                                                   value="<?= old('fecha_nacimiento', $usuario['fecha_nacimiento']) ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Teléfono</label>
+                                            <input type="text" name="telefono" class="form-control" 
+                                                   value="<?= old('telefono', $usuario['telefono']) ?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Dirección</label>
+                                    <input type="text" name="direccion" class="form-control" 
+                                           value="<?= old('direccion', $usuario['direccion']) ?>">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Cargo Actual</label>
+                                            <input type="text" name="cargo_actual" class="form-control" 
+                                                   value="<?= old('cargo_actual', $usuario['cargo_actual']) ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label>Dependencia</label>
+                                            <input type="text" name="dependencia" class="form-control" 
+                                                   value="<?= old('dependencia', $usuario['dependencia']) ?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Mensaje de Estado</label>
+                                    <input type="text" name="mensaje_estado" class="form-control" 
+                                           value="<?= old('mensaje_estado', $usuario['mensaje_estado']) ?>" 
+                                           placeholder="Ej: En medio del incendio, trabajando...">
+                                    <small class="text-muted">Mensaje breve que verán otros usuarios</small>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Estado</label>
+                                    <select name="estado" class="form-control">
+                                        <option value="Activo" <?= $usuario['estado'] == 'Activo' ? 'selected' : '' ?>>Activo</option>
+                                        <option value="Ausente" <?= $usuario['estado'] == 'Ausente' ? 'selected' : '' ?>>Ausente</option>
+                                        <option value="No Disponible" <?= $usuario['estado'] == 'No Disponible' ? 'selected' : '' ?>>No Disponible</option>
+                                        <option value="Ocupado" <?= $usuario['estado'] == 'Ocupado' ? 'selected' : '' ?>>Ocupado</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-az-primary">Actualizar Perfil</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="text-center">
-                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px;">
-                                <i class="fas fa-user fa-3x text-muted"></i>
-                            </div>
-                            <h5><?= $usuario['nombre'] ?> <?= $usuario['apellido'] ?></h5>
-                            <p class="text-muted"><?= $usuario['alias'] ?></p>
+                </div>
+
+                <!-- Cambiar Contraseña -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">🔒 Cambiar Contraseña</h6>
+                        </div>
+                        <div class="card-body">
+                            <form action="<?= base_url('perfil/cambiar-password') ?>" method="post">
+                                <?= csrf_field() ?>
+
+                                <?php if (session()->getFlashdata('success_password')): ?>
+                                    <div class="alert alert-success"><?= session()->getFlashdata('success_password') ?></div>
+                                <?php endif; ?>
+
+                                <?php if (session()->getFlashdata('error_password')): ?>
+                                    <div class="alert alert-danger"><?= session()->getFlashdata('error_password') ?></div>
+                                <?php endif; ?>
+
+                                <?php if (isset($errors_password) && $errors_password): ?>
+                                    <div class="alert alert-danger">
+                                        <ul class="mb-0">
+                                            <?php foreach ($errors_password as $e): ?>
+                                                <li><?= $e ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="form-group mb-3">
+                                    <label>Contraseña Actual</label>
+                                    <input type="password" name="password_actual" class="form-control" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Nueva Contraseña</label>
+                                    <input type="password" name="nueva_password" class="form-control" required minlength="8">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label>Confirmar Nueva Contraseña</label>
+                                    <input type="password" name="confirmar_password" class="form-control" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">Cambiar Contraseña</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Información de la Cuenta -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">ℹ️ Información de la Cuenta</h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Rol:</strong> <span class="badge bg-az-primary"><?= $usuario['rol'] ?></span></p>
+                            <p><strong>Estado de Aprobación:</strong> 
+                                <?php if ($usuario['aprobado']): ?>
+                                    <span class="badge bg-success">Aprobado</span>
+                                <?php else: ?>
+                                    <span class="badge bg-warning">Pendiente</span>
+                                <?php endif; ?>
+                            </p>
+                            <p><strong>Miembro desde:</strong><br>
+                                <?= date('d/m/Y', strtotime($usuario['created_at'])) ?>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Editar Información Básica -->
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-user-edit"></i> Editar Información Personal
-                </h5>
-            </div>
-            <div class="card-body">
-                <?php if (isset($errors)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="fas fa-exclamation-triangle"></i> Errores de validación:
-                        <ul class="mb-0 mt-2">
-                            <?php foreach ($errors as $error): ?>
-                                <li><?= $error ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <form action="<?= base_url('perfil/actualizar') ?>" method="post">
-                    <?= csrf_field() ?>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre *</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" 
-                                       value="<?= old('nombre', $usuario['nombre'] ?? '') ?>" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="apellido" class="form-label">Apellido *</label>
-                                <input type="text" class="form-control" id="apellido" name="apellido" 
-                                       value="<?= old('apellido', $usuario['apellido'] ?? '') ?>" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="alias" class="form-label">Alias *</label>
-                        <input type="text" class="form-control" id="alias" name="alias" 
-                               value="<?= old('alias', $usuario['alias'] ?? '') ?>" required>
-                        <div class="form-text">Nombre de usuario único para el sistema</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="<?= $usuario['email'] ?? '' ?>" readonly>
-                        <div class="form-text">El email no se puede modificar</div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefono" name="telefono" 
-                                       value="<?= old('telefono', $usuario['telefono'] ?? '') ?>">
-                                <div class="form-text">Ej: +34 123 456 789</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Nivel de Usuario</label>
-                                <input type="text" class="form-control" 
-                                       value="<?= ucfirst($usuario['nivel'] ?? '') ?>" readonly>
-                                <div class="form-text">Contacta al administrador para cambiar el nivel</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <textarea class="form-control" id="direccion" name="direccion" 
-                                  rows="3" placeholder="Ingresa tu dirección completa"><?= old('direccion', $usuario['direccion'] ?? '') ?></textarea>
-                    </div>
-
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Actualizar Información
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Cambiar Contraseña -->
-        <div class="card">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">
-                    <i class="fas fa-key"></i> Cambiar Contraseña
-                </h5>
-            </div>
-            <div class="card-body">
-                <!-- Mensajes específicos para cambio de contraseña -->
-                <?php if (session()->getFlashdata('success_password')): ?>
-                    <div class="alert alert-success alert-dismissible fade show">
-                        <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success_password') ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (session()->getFlashdata('error_password')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="fas fa-exclamation-circle"></i> <?= session()->getFlashdata('error_password') ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (session()->getFlashdata('errors_password')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="fas fa-exclamation-triangle"></i> Errores en el cambio de contraseña:
-                        <ul class="mb-0 mt-2">
-                            <?php foreach (session()->getFlashdata('errors_password') as $error): ?>
-                                <li><?= $error ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <form action="<?= base_url('perfil/cambiar-password') ?>" method="post">
-                    <?= csrf_field() ?>
-                    
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="password_actual" class="form-label">Contraseña Actual *</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="password_actual" name="password_actual" required>
-                                    <button type="button" class="btn btn-outline-secondary" id="togglePasswordActual">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Ingresa tu contraseña actual</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="nueva_password" class="form-label">Nueva Contraseña *</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="nueva_password" name="nueva_password" required minlength="8">
-                                    <button type="button" class="btn btn-outline-secondary" id="togglePasswordNueva">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Mínimo 8 caracteres</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="confirmar_password" class="form-label">Confirmar Nueva Contraseña *</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" required>
-                                    <button type="button" class="btn btn-outline-secondary" id="togglePasswordConfirmar">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Repite la nueva contraseña</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fas fa-sync-alt"></i> Cambiar Contraseña
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Información Adicional -->
-        <div class="card mt-4">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-info-circle"></i> Información de la Cuenta
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <th><i class="fas fa-calendar-plus"></i> Fecha de Registro:</th>
-                                <td><?= date('d/m/Y H:i', strtotime($usuario['created_at'])) ?></td>
-                            </tr>
-                            <tr>
-                                <th><i class="fas fa-calendar-check"></i> Última Actualización:</th>
-                                <td><?= date('d/m/Y H:i', strtotime($usuario['updated_at'])) ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <th><i class="fas fa-id-card"></i> ID de Usuario:</th>
-                                <td>#<?= $usuario['id'] ?></td>
-                            </tr>
-                            <tr>
-                                <th><i class="fas fa-database"></i> Registro en BD:</th>
-                                <td><?= $usuario['activo'] ? 'Activo' : 'Inactivo' ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Botón Volver -->
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
-            <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver al Dashboard
-            </a>
         </div>
     </div>
 </div>
-
-<script>
-// Mostrar/ocultar contraseñas
-document.addEventListener('DOMContentLoaded', function() {
-    // Función para toggle de visibilidad de contraseña
-    const togglePassword = (inputId, buttonId) => {
-        const input = document.getElementById(inputId);
-        const button = document.getElementById(buttonId);
-        
-        if (input && button) {
-            button.addEventListener('click', function() {
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-eye');
-                icon.classList.toggle('fa-eye-slash');
-            });
-        }
-    };
-
-    // Aplicar a los tres campos de contraseña
-    togglePassword('password_actual', 'togglePasswordActual');
-    togglePassword('nueva_password', 'togglePasswordNueva');
-    togglePassword('confirmar_password', 'togglePasswordConfirmar');
-
-    // Validación en tiempo real de coincidencia de contraseñas
-    const confirmarInput = document.getElementById('confirmar_password');
-    const nuevaInput = document.getElementById('nueva_password');
-    
-    if (confirmarInput && nuevaInput) {
-        confirmarInput.addEventListener('input', function() {
-            const nuevaPassword = nuevaInput.value;
-            const confirmarPassword = this.value;
-            
-            if (confirmarPassword && nuevaPassword !== confirmarPassword) {
-                this.classList.add('is-invalid');
-                this.classList.remove('is-valid');
-            } else if (confirmarPassword) {
-                this.classList.add('is-valid');
-                this.classList.remove('is-invalid');
-            } else {
-                this.classList.remove('is-invalid', 'is-valid');
-            }
-        });
-
-        // También validar cuando se escribe en nueva contraseña
-        nuevaInput.addEventListener('input', function() {
-            const confirmarPassword = confirmarInput.value;
-            if (confirmarPassword) {
-                confirmarInput.dispatchEvent(new Event('input'));
-            }
-        });
-    }
-
-    // Prevenir doble envío de formularios
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const submitButton = this.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-            }
-        });
-    });
-});
-</script>
-
-<?= $this->include('templates/footer') ?>
+<?php $this->endSection() ?>
