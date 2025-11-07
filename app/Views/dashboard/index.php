@@ -13,6 +13,23 @@
   </div>
 <?php endif; ?>
 
+<?php
+// Obtener la fecha actual como un objeto DateTime
+$date = new DateTime();
+
+// Crear un formateador para la fecha
+// 'es' para español. 
+// IntlDateFormatter::FULL o ::LONG, etc. para el estilo de la fecha y hora.
+$formatterDia = new IntlDateFormatter('es', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+$formatterFecha = new IntlDateFormatter('es', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+// El formato 'EEEE' da el nombre completo del día de la semana.
+$formatterDia->setPattern('EEEE');
+
+// El formato 'dd' día, 'MMMM' mes completo, 'yyyy' año.
+$formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
+?>
+
 <!-- Título -->
 <div class="az-dashboard-one-title">
   <div>
@@ -22,8 +39,8 @@
   <div class="az-content-header-right">
     <div class="media">
       <div class="media-body">
-        <label><?= date('l') ?></label>   <!-- Día semana -->
-        <h6><?= date('d') . ' de ' . date('F') . ' de ' . date('Y') ?></h6>
+        <label><?= $formatterDia->format($date) ?></label>
+        <h6><?= $formatterFecha->format($date) ?></h6>
       </div>
     </div>
   </div>
@@ -76,7 +93,8 @@
             <a href="#" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos</a>
           </div>
           <div class="card-body">
-            <div id="flotChart1" class="flot-chart d-flex justify-content-center align-items-center text-muted" style="height:150px;">
+            <div id="flotChart1" class="flot-chart d-flex justify-content-center align-items-center text-muted"
+              style="height:150px;">
               Gráfico de Docentes
             </div>
           </div>
@@ -87,11 +105,14 @@
       <div class="col-12 col-sm-6 col-lg-12">
         <div class="card shadow-sm h-100">
           <div class="card-header">
-            <h6 class="card-title fs-6 fs-md-5 mb-1">Postulantes <i class="icon ion-md-trending-down tx-danger"></i> <small>0.86 %</small></h6>
+            <h6 class="card-title fs-6 fs-md-5 mb-1">Postulantes <i class="icon ion-md-trending-down tx-danger"></i>
+              <small>0.86 %</small>
+            </h6>
             <p class="text-muted small mb-0">Total Users</p>
           </div>
           <div class="card-body">
-            <div id="flotChart2" class="flot-chart d-flex justify-content-center align-items-center text-muted" style="height:150px;">
+            <div id="flotChart2" class="flot-chart d-flex justify-content-center align-items-center text-muted"
+              style="height:150px;">
               Gráfico de Postulantes
             </div>
           </div>
