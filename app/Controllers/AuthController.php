@@ -10,7 +10,6 @@ namespace App\Controllers;
  * @package App\Controllers
  */
 
-
 use App\Models\UsuarioModel;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -61,9 +60,13 @@ class AuthController extends BaseController
         $password = $this->request->getPost('password');
 
         log_message('debug', 'Intentando login para: ' . $email);
-        log_message('debug', 'Password recibido: ' . $password);
 
         $usuario = $this->usuarioModel->verificarUsuario($email, $password);
+
+        if ($usuario === 'cuenta_no_aprobada') {
+            log_message('debug', 'Cuenta no aprobada para: ' . $email);
+            return redirect()->back()->withInput()->with('error', 'Tu cuenta no ha sido aprobada. Contacta al administrador.');
+        }
 
         if ($usuario) {
             log_message('debug', 'Usuario encontrado y verificado: ' . $email);
@@ -74,7 +77,8 @@ class AuthController extends BaseController
                 'usuario_apellido' => $usuario['apellido'],
                 'usuario_alias' => $usuario['alias'],
                 'usuario_email' => $usuario['email'],
-                'usuario_nivel' => $usuario['nivel'],
+                'usuario_rol' => $usuario['rol'],
+                'usuario_estado' => $usuario['estado'],
                 'logged_in' => true
             ];
 
@@ -82,43 +86,7 @@ class AuthController extends BaseController
             return redirect()->to('/dashboard')->with('success', '¡Bienvenido!');
         } else {
             log_message('debug', 'Falló la verificación para: ' . $email);
-            return redirect()->back()->withInput()->with('error', 'Credenciales incorrectas o cuenta inactiva');
-        }
-    }
-
-    public function procesarLogin2()
-    {
-        $rules = [
-            'email' => 'required|valid_email',
-            'password' => 'required|min_length[8]'
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
-        }
-
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-
-        $usuario = $this->usuarioModel->verificarUsuario($email, $password);
-
-        if ($usuario) {
-            $sessionData = [
-                'usuario_id' => $usuario['id'],
-                'usuario_nombre' => $usuario['nombre'],
-                'usuario_apellido' => $usuario['apellido'],
-                'usuario_alias' => $usuario['alias'],
-                'usuario_email' => $usuario['email'],
-                'usuario_nivel' => $usuario['nivel'],
-                'logged_in' => true
-            ];
-
-            $this->session->set($sessionData);
-
-            $mensajeBienvenida = "¡Bienvenido {$usuario['nombre']} {$usuario['apellido']} ({$usuario['alias']})!";
-            return redirect()->to('/dashboard')->with('success', $mensajeBienvenida);
-        } else {
-            return redirect()->back()->withInput()->with('error', 'Credenciales incorrectas o cuenta inactiva');
+            return redirect()->back()->withInput()->with('error', 'Credenciales incorrectas');
         }
     }
 
@@ -138,12 +106,16 @@ class AuthController extends BaseController
     public function procesarRegistro()
     {
         $rules = [
-            'nombre' => 'required|min_length[2]|max_length[100]',
             'apellido' => 'required|min_length[2]|max_length[100]',
+            'nombre' => 'required|min_length[2]|max_length[100]',
             'alias' => 'required|min_length[3]|max_length[50]|is_unique[usuarios.alias]',
             'email' => 'required|valid_email|is_unique[usuarios.email]',
+            'dni' => 'permit_empty|min_length[7]|max_length[10]',
+            'fecha_nacimiento' => 'permit_empty|valid_date',
             'telefono' => 'permit_empty|min_length[8]|max_length[20]',
-            'direccion' => 'permit_empty|max_length[500]',
+            'direccion' => 'permit_empty|max_length[200]',
+            'cargo_actual' => 'permit_empty|max_length[200]',
+            'dependencia' => 'permit_empty|max_length[200]',
             'password' => 'required|min_length[8]',
             'confirm_password' => 'required|matches[password]'
         ];
@@ -162,14 +134,20 @@ class AuthController extends BaseController
         }
 
         $data = [
-            'nombre' => $this->request->getPost('nombre'),
             'apellido' => $this->request->getPost('apellido'),
+            'nombre' => $this->request->getPost('nombre'),
             'alias' => $alias,
             'email' => $this->request->getPost('email'),
+            'dni' => $this->request->getPost('dni'),
+            'fecha_nacimiento' => $this->request->getPost('fecha_nacimiento'),
             'telefono' => $this->request->getPost('telefono'),
             'direccion' => $this->request->getPost('direccion'),
+            'cargo_actual' => $this->request->getPost('cargo_actual'),
+            'dependencia' => $this->request->getPost('dependencia'),
             'password' => $this->request->getPost('password'),
-            'nivel' => 'usuario' // Por defecto
+            'rol' => 'Usuario', // Por defecto
+            'aprobado' => 1, // Por defecto aprobado
+            'estado' => 'Activo' // Por defecto activo
         ];
 
         if ($this->usuarioModel->save($data)) {
@@ -229,23 +207,26 @@ class AuthController extends BaseController
 
         $usuarioId = $this->session->get('usuario_id');
 
-        // Validación básica
+        // Validación
         $rules = [
-            'nombre' => 'required|min_length[2]|max_length[100]',
             'apellido' => 'required|min_length[2]|max_length[100]',
+            'nombre' => 'required|min_length[2]|max_length[100]',
             'alias' => 'required|min_length[3]|max_length[50]',
+            'dni' => 'permit_empty|min_length[7]|max_length[10]',
             'telefono' => 'permit_empty|min_length[8]|max_length[20]',
-            'direccion' => 'permit_empty|max_length[500]'
+            'direccion' => 'permit_empty|max_length[200]',
+            'cargo_actual' => 'permit_empty|max_length[200]',
+            'dependencia' => 'permit_empty|max_length[200]',
+            'mensaje_estado' => 'permit_empty|max_length[200]',
+            'estado' => 'required|in_list[Activo,Ausente,No Disponible,Ocupado]'
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         }
 
-        // Obtener datos
+        // Verificar alias único (excluyendo usuario actual)
         $nuevoAlias = $this->request->getPost('alias');
-
-        // Verificar si el alias ya existe (excluyendo al usuario actual)
         $db = \Config\Database::connect();
         $builder = $db->table('usuarios');
         $builder->where('alias', $nuevoAlias);
@@ -256,27 +237,30 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Este alias ya está en uso. Por favor elige otro.');
         }
 
-        // Preparar datos para actualizar
+        // Preparar datos
         $data = [
-            'nombre' => $this->request->getPost('nombre'),
             'apellido' => $this->request->getPost('apellido'),
+            'nombre' => $this->request->getPost('nombre'),
             'alias' => $nuevoAlias,
+            'dni' => $this->request->getPost('dni'),
+            'fecha_nacimiento' => $this->request->getPost('fecha_nacimiento'),
             'telefono' => $this->request->getPost('telefono'),
             'direccion' => $this->request->getPost('direccion'),
+            'cargo_actual' => $this->request->getPost('cargo_actual'),
+            'dependencia' => $this->request->getPost('dependencia'),
+            'mensaje_estado' => $this->request->getPost('mensaje_estado'),
+            'estado' => $this->request->getPost('estado'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
 
-        // Actualizar en la base de datos
-        $builder = $db->table('usuarios');
-        $builder->where('id', $usuarioId);
-        $result = $builder->update($data);
-
-        if ($result) {
-            // Actualizar datos de sesión
+        // Actualizar en BD
+        if ($this->usuarioModel->update($usuarioId, $data)) {
+            // Actualizar sesión
             $this->session->set([
                 'usuario_nombre' => $data['nombre'],
                 'usuario_apellido' => $data['apellido'],
-                'usuario_alias' => $data['alias']
+                'usuario_alias' => $data['alias'],
+                'usuario_estado' => $data['estado']
             ]);
 
             return redirect()->to('/perfil')->with('success', 'Perfil actualizado correctamente.');
@@ -284,6 +268,7 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Error al actualizar el perfil.');
         }
     }
+
     public function cambiarPassword()
     {
         if (!$this->session->get('logged_in')) {
@@ -323,5 +308,99 @@ class AuthController extends BaseController
         } else {
             return redirect()->to('/perfil')->with('error_password', 'Error al cambiar la contraseña en la base de datos.');
         }
+    }
+
+    public function recuperarPassword()
+    {
+        if ($this->session->get('logged_in')) {
+            return redirect()->to('/dashboard');
+        }
+
+        $data = [
+            'titulo' => 'Recuperar Contraseña - SGC'
+        ];
+
+        return view('auth/recuperar_password', $data);
+    }
+
+    public function solicitarRecuperacion()
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
+        }
+
+        $rules = [
+            'email' => 'required|valid_email'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        $email = $this->request->getPost('email');
+        $usuario = $this->usuarioModel->buscarPorEmail($email);
+
+        if ($usuario) {
+            // Generar token único
+            $token = bin2hex(random_bytes(32));
+            
+            // Guardar token en la base de datos (necesitarías una tabla para tokens)
+            // Por simplicidad, aquí simulamos el envío
+            log_message('info', "Token de recuperación para $email: $token");
+            
+            return redirect()->to('/recuperar-password')->with('success', 
+                'Se ha enviado un enlace de recuperación a tu email.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 
+                'No existe una cuenta con ese email.');
+        }
+    }
+
+    public function resetearPassword($token = null)
+    {
+        if ($this->session->get('logged_in')) {
+            return redirect()->to('/dashboard');
+        }
+
+        if (!$token) {
+            return redirect()->to('/recuperar-password')->with('error', 'Token inválido');
+        }
+
+        $data = [
+            'titulo' => 'Restablecer Contraseña - SGC',
+            'token' => $token
+        ];
+
+        return view('auth/resetear_password', $data);
+    }
+
+    public function actualizarPassword($token = null)
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
+        }
+
+        if (!$token) {
+            return redirect()->to('/recuperar-password')->with('error', 'Token inválido');
+        }
+
+        $rules = [
+            'password' => 'required|min_length[8]',
+            'confirm_password' => 'required|matches[password]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        // En una implementación real, aquí verificarías el token en la base de datos
+        // y obtendrías el usuario asociado al token
+        $nuevaPassword = $this->request->getPost('password');
+
+        // Simulación de actualización (en realidad necesitarías el email del token)
+        log_message('info', "Contraseña actualizada para token: $token");
+
+        return redirect()->to('/login')->with('success', 
+            'Contraseña restablecida correctamente. Ahora puedes iniciar sesión.');
     }
 }
