@@ -13,9 +13,21 @@ class UsuarioModel extends Model
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields = [
-        'apellido', 'nombre', 'password', 'mensaje_estado', 'direccion', 
-        'email', 'alias', 'dni', 'fecha_nacimiento', 'cargo_actual', 
-        'dependencia', 'rol', 'aprobado', 'estado'
+        'apellido',
+        'nombre',
+        'password',
+        'mensaje_estado',
+        'direccion',
+        'email',
+        'alias',
+        'dni',
+        'fecha_nacimiento',
+        'telefono',
+        'cargo_actual',
+        'dependencia',
+        'rol',
+        'aprobado',
+        'estado'
     ];
 
     // Dates
@@ -32,6 +44,7 @@ class UsuarioModel extends Model
         'email' => 'required|valid_email|is_unique[usuarios.email]',
         'dni' => 'permit_empty|min_length[7]|max_length[10]',
         'fecha_nacimiento' => 'permit_empty|valid_date',
+        'telefono' => 'permit_empty|min_length[8]|max_length[20]',
         'password' => 'required|min_length[8]',
         'rol' => 'required|in_list[Usuario,Experto,Sistemas]'
     ];
