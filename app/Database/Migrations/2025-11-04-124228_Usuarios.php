@@ -15,25 +15,30 @@ class Usuarios extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'nombre' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '100',
-                'null'       => false,
-            ],
             'apellido' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '100',
                 'null'       => false,
             ],
-            'alias' => [
+            'nombre' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '50',
+                'constraint' => '100',
                 'null'       => false,
-                'unique'     => true,
+            ],
+            'password' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => false,
+            ],
+            'mensaje_estado' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '200',
+                'null'       => true,
             ],
             'direccion' => [
-                'type' => 'TEXT',
-                'null' => true,
+                'type'       => 'VARCHAR',
+                'constraint' => '200',
+                'null'       => true,
             ],
             'email' => [
                 'type'       => 'VARCHAR',
@@ -41,25 +46,45 @@ class Usuarios extends Migration
                 'null'       => false,
                 'unique'     => true,
             ],
-            'telefono' => [
+            'alias' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '20',
+                'constraint' => '50',
+                'null'       => false,
+                'unique'     => true,
+            ],
+            'dni' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
                 'null'       => true,
             ],
-            'password' => [
+            'fecha_nacimiento' => [
+                'type'       => 'DATE',
+                'null'       => true,
+            ],
+            'cargo_actual' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '255',
-                'null'       => false,
+                'constraint' => '200',
+                'null'       => true,
             ],
-            'nivel' => [
+            'dependencia' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '200',
+                'null'       => true,
+            ],
+            'rol' => [
                 'type'       => 'ENUM',
-                'constraint' => ['usuario', 'sistema'],
-                'default'    => 'usuario',
+                'constraint' => ['Usuario', 'Experto', 'Sistemas'],
+                'default'    => 'Usuario',
             ],
-            'activo' => [
+            'aprobado' => [
                 'type'       => 'TINYINT',
                 'constraint' => 1,
                 'default'    => 1,
+            ],
+            'estado' => [
+                'type'       => 'ENUM',
+                'constraint' => ['Activo', 'Ausente', 'No Disponible', 'Ocupado'],
+                'default'    => 'Activo',
             ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
