@@ -22,22 +22,27 @@ class DashboardController extends ResourceController
         }
     }
 
-    public function index()
-    {
-        $data = [
-            'titulo' => 'Dashboard Principal',
-            'usuario_id' => $this->session->get('usuario_id'),
-            'usuario_nombre' => $this->session->get('usuario_nombre'),
-            'usuario_apellido' => $this->session->get('usuario_apellido'),
-            'usuario_alias' => $this->session->get('usuario_alias'),
-            'usuario_email' => $this->session->get('usuario_email'),
-            'usuario_nivel' => $this->session->get('usuario_nivel'),
-            'mensaje_estado' => $this->session->get('mensaje_estado'),
-            'total_usuarios' => $this->usuarioModel->countAll()
-        ];
+public function index()
+{
+    // Obtener datos completos del usuario desde la base de datos
+    $usuarioId = $this->session->get('usuario_id');
+    $usuario = $this->usuarioModel->find($usuarioId);
 
-        return view('dashboard/index', $data);
-    }
+    $data = [
+        'titulo' => 'Dashboard Principal',
+        'usuario_id' => $this->session->get('usuario_id'),
+        'usuario_nombre' => $this->session->get('usuario_nombre'),
+        'usuario_apellido' => $this->session->get('usuario_apellido'),
+        'usuario_alias' => $this->session->get('usuario_alias'),
+        'usuario_email' => $this->session->get('usuario_email'),
+        'usuario_rol' => $this->session->get('usuario_rol'),
+        'usuario_estado' => $this->session->get('usuario_estado'),
+        'usuario_mensaje_estado' => $usuario['mensaje_estado'] ?? '', // Agregar mensaje de estado
+        'total_usuarios' => $this->usuarioModel->countAll()
+    ];
+
+    return view('dashboard/index', $data);
+}
 
     public function administrarUsuarios()
     {

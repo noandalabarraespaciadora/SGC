@@ -54,23 +54,55 @@
 
     <div class="az-header-right">
       <div class="dropdown az-profile-menu">
-        <a href="#" class="az-img-user"><img src="<?= base_url('assets/img/faces/face1.jpg') ?>" alt=""></a>
+        <!-- Avatar generado dinámicamente -->
+        <a href="#" class="az-img-user">
+          <img src="https://ui-avatars.com/api/?name=<?= urlencode(($usuario_nombre ?? '') . '+' . ($usuario_apellido ?? '')) ?>&background=random&color=fff&size=40" 
+               alt="<?= esc($usuario_nombre ?? 'Usuario') ?>">
+        </a>
         <div class="dropdown-menu">
           <div class="az-dropdown-header d-sm-none">
             <a href="#" class="az-header-arrow"><i class="icon ion-md-arrow-back"></i></a>
           </div>
           <div class="az-header-profile">
-            <div class="az-img-user"><img src="<?= base_url('assets/img/faces/face1.jpg') ?>" alt=""></div>
-            <h6 class="text-center"><?= esc($usuario_nombre ?? 'Usuario') ?></h6>
-            <span class="muted"><?= esc($usuario_nivel ?? 'Rol') ?></span>
-
+            <!-- Avatar en el dropdown -->
+            <div class="az-img-user">
+              <img src="https://ui-avatars.com/api/?name=<?= urlencode(($usuario_nombre ?? '') . '+' . ($usuario_apellido ?? '')) ?>&background=random&color=fff&size=80" 
+                   alt="<?= esc($usuario_nombre ?? 'Usuario') ?>">
+            </div>
+            
+            <!-- Información del usuario -->
+            <h6 class="text-center mb-1">
+              <?= esc($usuario_nombre ?? 'Nombre') ?> <?= esc($usuario_apellido ?? 'Apellido') ?>
+            </h6>
+            
+            <!-- Mensaje de estado -->
+            <?php if (isset($usuario_mensaje_estado) && !empty($usuario_mensaje_estado)): ?>
+              <p class="text-muted small mb-1">"<?= esc($usuario_mensaje_estado) ?>"</p>
+            <?php else: ?>
+              <p class="text-muted small mb-1">Sin mensaje de estado</p>
+            <?php endif; ?>
+            
+            <!-- Badge del rol -->
+            <?php if (isset($usuario_rol)): ?>
+              <span class="badge 
+                <?= $usuario_rol == 'Sistemas' ? 'bg-danger' : 
+                   ($usuario_rol == 'Experto' ? 'bg-warning' : 'bg-primary') ?>">
+                <?= $usuario_rol ?>
+              </span>
+            <?php else: ?>
+              <span class="badge bg-secondary">Usuario</span>
+            <?php endif; ?>
           </div>
-          <a href="<?= base_url('perfil') ?>" class="dropdown-item"><i class="typcn typcn-user-outline"></i>Mis
-          datos</a>
-          <a href="<?= base_url('logout') ?>" class="dropdown-item"><i class="typcn typcn-power-outline"></i> Salir</a>
+          
+          <!-- Enlaces del menú -->
+          <a href="<?= base_url('perfil') ?>" class="dropdown-item">
+            <i class="typcn typcn-user-outline"></i> Mis datos
+          </a>
+          <a href="<?= base_url('logout') ?>" class="dropdown-item">
+            <i class="typcn typcn-power-outline"></i> Salir
+          </a>
         </div><!-- dropdown-menu -->
       </div>
     </div><!-- az-header-right -->
   </div><!-- container -->
 </div><!-- az-header -->
-

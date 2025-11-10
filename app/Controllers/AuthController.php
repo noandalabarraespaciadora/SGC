@@ -79,6 +79,7 @@ class AuthController extends BaseController
                 'usuario_email' => $usuario['email'],
                 'usuario_rol' => $usuario['rol'],
                 'usuario_estado' => $usuario['estado'],
+                'usuario_mensaje_estado' => $usuario['mensaje_estado'] ?? '', // Agregar mensaje de estado
                 'logged_in' => true
             ];
 
@@ -193,13 +194,21 @@ class AuthController extends BaseController
 
         $data = [
             'titulo' => 'Mi Perfil',
-            'usuario' => $usuario
+            'usuario' => $usuario,
+            'usuario_id' => $this->session->get('usuario_id'),
+            'usuario_nombre' => $this->session->get('usuario_nombre'),
+            'usuario_apellido' => $this->session->get('usuario_apellido'),
+            'usuario_alias' => $this->session->get('usuario_alias'),
+            'usuario_email' => $this->session->get('usuario_email'),
+            'usuario_rol' => $this->session->get('usuario_rol'),
+            'usuario_estado' => $this->session->get('usuario_estado'),
+            'usuario_mensaje_estado' => $this->session->get('usuario_mensaje_estado')
         ];
 
         return view('auth/perfil', $data);
     }
 
-    public function actualizarPerfil()
+    public function actualizarPerfil2()
     {
         if (!$this->session->get('logged_in')) {
             return redirect()->to('/login');
@@ -263,6 +272,71 @@ class AuthController extends BaseController
         }
     }
 
+    public function actualizarPerfil()
+    {
+        if (!$this->session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $usuarioId = $this->session->get('usuario_id');
+
+        // Validación básica
+        $rules = [
+            'apellido' => 'required|min_length[2]|max_length[100]',
+            'nombre' => 'required|min_length[2]|max_length[100]',
+            'alias' => 'required|min_length[3]|max_length[50]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        // Verificar alias único
+        $nuevoAlias = $this->request->getPost('alias');
+        $db = \Config\Database::connect();
+        $builder = $db->table('usuarios');
+        $builder->where('alias', $nuevoAlias);
+        $builder->where('id !=', $usuarioId);
+
+        if ($builder->get()->getRow()) {
+            return redirect()->back()->withInput()->with('error', 'Este alias ya está en uso.');
+        }
+
+        // Datos para actualizar
+        $data = [
+            'apellido' => $this->request->getPost('apellido'),
+            'nombre' => $this->request->getPost('nombre'),
+            'alias' => $nuevoAlias,
+            'dni' => $this->request->getPost('dni'),
+            'fecha_nacimiento' => $this->request->getPost('fecha_nacimiento'),
+            'telefono' => $this->request->getPost('telefono'),
+            'direccion' => $this->request->getPost('direccion'),
+            'cargo_actual' => $this->request->getPost('cargo_actual'),
+            'dependencia' => $this->request->getPost('dependencia'),
+            'mensaje_estado' => $this->request->getPost('mensaje_estado'),
+            'estado' => $this->request->getPost('estado'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Actualización directa a la base de datos
+        $builder = $db->table('usuarios');
+        $builder->where('id', $usuarioId);
+
+        if ($builder->update($data)) {
+            // Actualizar TODAS las variables de sesión
+            $this->session->set([
+                'usuario_nombre' => $data['nombre'],
+                'usuario_apellido' => $data['apellido'],
+                'usuario_alias' => $data['alias'],
+                'usuario_estado' => $data['estado'],
+                'usuario_mensaje_estado' => $data['mensaje_estado'] // Actualizar también el mensaje de estado
+            ]);
+
+            return redirect()->to('/perfil')->with('success', 'Perfil actualizado correctamente.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Error al actualizar el perfil.');
+        }
+    }
     public function cambiarPassword()
     {
         if (!$this->session->get('logged_in')) {
