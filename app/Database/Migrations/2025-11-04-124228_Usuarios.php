@@ -57,7 +57,7 @@ class Usuarios extends Migration
                 'constraint' => '10',
                 'null' => true,
             ],
-            'telefono' => [  
+            'telefono' => [
                 'type' => 'VARCHAR',
                 'constraint' => '20',
                 'null' => true,
@@ -90,6 +90,16 @@ class Usuarios extends Migration
                 'type' => 'ENUM',
                 'constraint' => ['Activo', 'Ausente', 'No Disponible', 'Ocupado'],
                 'default' => 'Activo',
+            ],
+            'pregunta_seguridad' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'null' => true,
+            ],
+            'respuesta_seguridad' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true,
             ],
             'created_at' => [
                 'type' => 'TIMESTAMP',

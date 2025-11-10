@@ -27,7 +27,9 @@ class UsuarioModel extends Model
         'dependencia',
         'rol',
         'aprobado',
-        'estado'
+        'estado',
+        'pregunta_seguridad',
+        'respuesta_seguridad'
     ];
 
     // Dates
@@ -46,7 +48,9 @@ class UsuarioModel extends Model
         'fecha_nacimiento' => 'permit_empty|valid_date',
         'telefono' => 'permit_empty|min_length[8]|max_length[20]',
         'password' => 'required|min_length[8]',
-        'rol' => 'required|in_list[Usuario,Experto,Sistemas]'
+        'rol' => 'required|in_list[Usuario,Experto,Sistemas]',
+        'pregunta_seguridad' => 'permit_empty|max_length[100]',
+        'respuesta_seguridad' => 'permit_empty|max_length[255]'
     ];
 
     protected $validationMessages = [
@@ -150,4 +154,24 @@ class UsuarioModel extends Model
         $this->skipValidation(false);
         return parent::update($id, $data);
     }
+
+    public function verificarRespuestaSeguridad($email, $respuesta)
+    {
+        $usuario = $this->where('email', $email)->first();
+
+        if ($usuario && !empty($usuario['respuesta_seguridad'])) {
+            // Comparar sin importar mayúsculas/minúsculas
+            return strtoupper(trim($respuesta)) === strtoupper(trim($usuario['respuesta_seguridad']));
+        }
+
+        return false;
+    }
+
+    public function obtenerPreguntaSeguridad($email)
+    {
+        $usuario = $this->where('email', $email)->first();
+        return $usuario ? $usuario['pregunta_seguridad'] : null;
+    }
+
+
 }

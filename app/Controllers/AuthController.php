@@ -118,7 +118,9 @@ class AuthController extends BaseController
             'cargo_actual' => 'permit_empty|max_length[200]',
             'dependencia' => 'permit_empty|max_length[200]',
             'password' => 'required|min_length[8]',
-            'confirm_password' => 'required|matches[password]'
+            'confirm_password' => 'required|matches[password]',
+            'pregunta_seguridad' => 'required|max_length[100]',
+            'respuesta_seguridad' => 'required|max_length[255]'
         ];
 
         if (!$this->validate($rules)) {
@@ -146,17 +148,20 @@ class AuthController extends BaseController
             'cargo_actual' => $this->request->getPost('cargo_actual'),
             'dependencia' => $this->request->getPost('dependencia'),
             'password' => $this->request->getPost('password'),
+            'pregunta_seguridad' => $this->request->getPost('pregunta_seguridad'),
+            'respuesta_seguridad' => strtoupper(trim($this->request->getPost('respuesta_seguridad'))), // Guardar en mayúsculas
             'rol' => 'Usuario', // Por defecto
             'aprobado' => 1, // Por defecto aprobado
             'estado' => 'Activo' // Por defecto activo
         ];
 
         if ($this->usuarioModel->save($data)) {
-            return redirect()->to('/login')->with('success', '¡Registro exitoso! Ahora puedes iniciar sesión.');
+            return redirect()->to('/login')->with('success', '¡Registro exitoso! Ahora puedes iniciar sesión. Recuerda tu pregunta de seguridad para recuperar tu cuenta.');
         } else {
             return redirect()->back()->withInput()->with('error', 'Error al registrar el usuario. Inténtalo de nuevo.');
         }
     }
+
 
     private function generarAliasUnico($baseAlias)
     {
@@ -391,42 +396,7 @@ class AuthController extends BaseController
         return view('auth/recuperar_password', $data);
     }
 
-    public function solicitarRecuperacion()
-    {
-        if (!$this->request->is('post')) {
-            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
-        }
 
-        $rules = [
-            'email' => 'required|valid_email'
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
-        }
-
-        $email = $this->request->getPost('email');
-        $usuario = $this->usuarioModel->buscarPorEmail($email);
-
-        if ($usuario) {
-            // Generar token único
-            $token = bin2hex(random_bytes(32));
-
-            // Guardar token en la base de datos (necesitarías una tabla para tokens)
-            // Por simplicidad, aquí simulamos el envío
-            log_message('info', "Token de recuperación para $email: $token");
-
-            return redirect()->to('/recuperar-password')->with(
-                'success',
-                'Se ha enviado un enlace de recuperación a tu email.'
-            );
-        } else {
-            return redirect()->back()->withInput()->with(
-                'error',
-                'No existe una cuenta con ese email.'
-            );
-        }
-    }
 
     public function resetearPassword($token = null)
     {
@@ -476,5 +446,149 @@ class AuthController extends BaseController
             'success',
             'Contraseña restablecida correctamente. Ahora puedes iniciar sesión.'
         );
+    }
+    public function solicitarRecuperacion()
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
+        }
+
+        $rules = [
+            'email' => 'required|valid_email'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        $email = $this->request->getPost('email');
+        $usuario = $this->usuarioModel->buscarPorEmail($email);
+
+        if ($usuario) {
+            // Verificar si el usuario tiene pregunta de seguridad configurada
+            if (empty($usuario['pregunta_seguridad']) || empty($usuario['respuesta_seguridad'])) {
+                return redirect()->back()->withInput()->with(
+                    'error',
+                    'Este usuario no tiene configurada una pregunta de seguridad. Contacta al administrador.'
+                );
+            }
+
+            // Mostrar la pregunta de seguridad
+            return $this->mostrarPreguntaSeguridad($email);
+        } else {
+            return redirect()->back()->withInput()->with(
+                'error',
+                'No existe una cuenta con ese email.'
+            );
+        }
+    }
+
+    private function mostrarPreguntaSeguridad($email)
+    {
+        $pregunta = $this->usuarioModel->obtenerPreguntaSeguridad($email);
+
+        if (!$pregunta) {
+            return redirect()->to('/recuperar-password')->with(
+                'error',
+                'No se encontró pregunta de seguridad para este usuario.'
+            );
+        }
+
+        $data = [
+            'titulo' => 'Verificación de Seguridad - SGC',
+            'email' => $email,
+            'pregunta_seguridad' => $pregunta
+        ];
+
+        return view('auth/verificar_pregunta', $data);
+    }
+
+    public function verificarRespuesta()
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
+        }
+
+        $rules = [
+            'email' => 'required|valid_email',
+            'respuesta_seguridad' => 'required'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        $email = $this->request->getPost('email');
+        $respuesta = $this->request->getPost('respuesta_seguridad');
+
+        // Verificar la respuesta
+        if ($this->usuarioModel->verificarRespuestaSeguridad($email, $respuesta)) {
+            // Respuesta correcta, permitir cambiar contraseña
+            return $this->mostrarFormularioNuevaPassword($email);
+        } else {
+            // Respuesta incorrecta
+            $pregunta = $this->usuarioModel->obtenerPreguntaSeguridad($email);
+
+            $data = [
+                'titulo' => 'Verificación de Seguridad - SGC',
+                'email' => $email,
+                'pregunta_seguridad' => $pregunta
+            ];
+
+            return view('auth/verificar_pregunta', $data)->with(
+                'error',
+                '❌ Respuesta incorrecta. Por favor intenta nuevamente o haz memoria.'
+            );
+        }
+    }
+
+    private function mostrarFormularioNuevaPassword($email)
+    {
+        $data = [
+            'titulo' => 'Nueva Contraseña - SGC',
+            'email' => $email
+        ];
+
+        return view('auth/nueva_password', $data);
+    }
+
+    public function actualizarPasswordRecuperacion()
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('/recuperar-password')->with('error', 'Método no permitido');
+        }
+
+        $rules = [
+            'email' => 'required|valid_email',
+            'password' => 'required|min_length[8]',
+            'confirm_password' => 'required|matches[password]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        $email = $this->request->getPost('email');
+        $nuevaPassword = $this->request->getPost('password');
+
+        // Actualizar la contraseña en la base de datos
+        $db = \Config\Database::connect();
+        $hashedPassword = password_hash($nuevaPassword, PASSWORD_DEFAULT);
+
+        $builder = $db->table('usuarios');
+        $builder->where('email', $email);
+        $result = $builder->update(['password' => $hashedPassword]);
+
+        if ($result) {
+            return redirect()->to('/login')->with(
+                'success',
+                '✅ Contraseña actualizada correctamente. Ahora puedes iniciar sesión con tu nueva contraseña.'
+            );
+        } else {
+            return redirect()->back()->withInput()->with(
+                'error',
+                '❌ Error al actualizar la contraseña. Por favor intenta nuevamente.'
+            );
+        }
     }
 }

@@ -14,18 +14,24 @@ $routes->group('auth', function ($routes) {
     $routes->post('procesar-login', 'AuthController::procesarLogin');
     $routes->post('procesar-registro', 'AuthController::procesarRegistro');
     $routes->post('solicitar-recuperacion', 'AuthController::solicitarRecuperacion');
-    $routes->get('resetear-password/(:any)', 'AuthController::resetearPassword/$1');
-    $routes->post('actualizar-password/(:any)', 'AuthController::actualizarPassword/$1');
+    $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta'); // MOVER AQUÍ
+    $routes->post('actualizar-password-recuperacion', 'AuthController::actualizarPasswordRecuperacion'); // MOVER AQUÍ
+    
+    // Rutas antiguas (puedes eliminarlas si ya no las usas)
+    // $routes->get('resetear-password/(:any)', 'AuthController::resetearPassword/$1');
+    // $routes->post('actualizar-password/(:any)', 'AuthController::actualizarPassword/$1');
 });
 
 // Protegidas
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Dashboard
-    $routes->get('dashboard', 'DashboardController::index');    
+    $routes->get('dashboard', 'DashboardController::index');
+    
     // Perfil
     $routes->get('perfil', 'AuthController::perfil');
     $routes->post('perfil/actualizar', 'AuthController::actualizarPerfil');
     $routes->post('perfil/cambiar-password', 'AuthController::cambiarPassword');
+    
     // Administración (solo para rol Sistemas)
     $routes->group('admin', function ($routes) {
         $routes->get('usuarios', 'AdminController::index');

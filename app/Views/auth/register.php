@@ -48,7 +48,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Apellido *</label>
-                            <input type="text" name="apellido" class="form-control" value="<?= old('apellido') ?>" required>
+                            <input type="text" name="apellido" class="form-control" value="<?= old('apellido') ?>"
+                                required>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -84,7 +85,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Fecha de Nacimiento</label>
-                            <input type="date" name="fecha_nacimiento" class="form-control" value="<?= old('fecha_nacimiento') ?>">
+                            <input type="date" name="fecha_nacimiento" class="form-control"
+                                value="<?= old('fecha_nacimiento') ?>">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -104,13 +106,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Cargo Actual</label>
-                            <input type="text" name="cargo_actual" class="form-control" value="<?= old('cargo_actual') ?>">
+                            <input type="text" name="cargo_actual" class="form-control"
+                                value="<?= old('cargo_actual') ?>">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Dependencia</label>
-                            <input type="text" name="dependencia" class="form-control" value="<?= old('dependencia') ?>">
+                            <input type="text" name="dependencia" class="form-control"
+                                value="<?= old('dependencia') ?>">
                         </div>
                     </div>
                 </div>
@@ -128,6 +132,31 @@
                             <input type="password" name="confirm_password" class="form-control" required>
                         </div>
                     </div>
+                </div>
+
+                <hr class="my-4">
+                <h6 class="text-center">🔒 Pregunta de Seguridad</h6>
+                <p class="text-muted text-center small">Esta pregunta te ayudará a recuperar tu cuenta si olvidas la
+                    contraseña</p>
+
+                <div class="form-group mb-3">
+                    <label>Selecciona tu pregunta de seguridad *</label>
+                    <select name="pregunta_seguridad" class="form-control" required>
+                        <option value="">-- Selecciona una pregunta --</option>
+                        <option value="¿Cuál es tu color favorito?" <?= old('pregunta_seguridad') == '¿Cuál es tu color favorito?' ? 'selected' : '' ?>>¿Cuál es tu color favorito?</option>
+                        <option value="¿Cuál era el héroe de tu infancia?" <?= old('pregunta_seguridad') == '¿Cuál era el héroe de tu infancia?' ? 'selected' : '' ?>>¿Cuál era el héroe de tu infancia?</option>
+                        <option value="¿Cómo se llamaba tu primera mascota?" <?= old('pregunta_seguridad') == '¿Cómo se llamaba tu primera mascota?' ? 'selected' : '' ?>>¿Cómo se llamaba tu primera mascota?
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Respuesta de seguridad *</label>
+                    <input type="text" name="respuesta_seguridad" class="form-control"
+                        value="<?= old('respuesta_seguridad') ?>" required
+                        placeholder="Escribe tu respuesta (se guardará en mayúsculas)">
+                    <small class="text-muted">Esta respuesta se guardará en mayúsculas y te será solicitada para
+                        recuperar tu cuenta.</small>
                 </div>
 
                 <div class="form-group">
