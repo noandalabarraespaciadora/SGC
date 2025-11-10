@@ -32,6 +32,7 @@ class DashboardController extends ResourceController
             'usuario_alias' => $this->session->get('usuario_alias'),
             'usuario_email' => $this->session->get('usuario_email'),
             'usuario_nivel' => $this->session->get('usuario_nivel'),
+            'mensaje_estado' => $this->session->get('mensaje_estado'),
             'total_usuarios' => $this->usuarioModel->countAll()
         ];
 
