@@ -63,9 +63,7 @@
             <div class="az-img-user"><img src="<?= base_url('assets/img/faces/face1.jpg') ?>" alt=""></div>
             <h6 class="text-center"><?= esc($usuario_nombre ?? 'Usuario') ?></h6>
             <span class="muted"><?= esc($usuario_nivel ?? 'Rol') ?></span>
-            <span class="muted">
-              | 💬 "<?= esc($mensaje_estado) ?>"
-            </span>
+
           </div>
           <a href="<?= base_url('perfil') ?>" class="dropdown-item"><i class="typcn typcn-user-outline"></i>Mis
           datos</a>
