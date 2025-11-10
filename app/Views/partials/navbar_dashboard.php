@@ -13,7 +13,8 @@
 
     <div class="az-header-menu" id="azHeaderMenu">
       <div class="az-header-menu-header">
-        <h2 class="text-default"><i class="typcn typcn-location-arrow-outline"></i><a href="<?= base_url('/') ?>">SGC</a></h2>
+        <h2 class="text-default"><i class="typcn typcn-location-arrow-outline"></i><a
+            href="<?= base_url('/') ?>">SGC</a></h2>
         <a href="#" class="close" id="azMenuClose">&times;</a>
       </div>
       <ul class="nav">
@@ -22,7 +23,8 @@
         </li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-zoom-outline"></i> Buscar</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-group-outline"></i> Postulantes</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a>
+        </li>
         <li class="nav-item">
           <a href="#" class="nav-link with-sub"><i class="typcn typcn-puzzle-outline"></i> Módulos</a>
           <nav class="az-menu-sub">
@@ -61,11 +63,16 @@
             <div class="az-img-user"><img src="<?= base_url('assets/img/faces/face1.jpg') ?>" alt=""></div>
             <h6 class="text-center"><?= esc($usuario_nombre ?? 'Usuario') ?></h6>
             <span class="muted"><?= esc($usuario_nivel ?? 'Rol') ?></span>
+            <span class="muted">
+              | 💬 "<?= esc($mensaje_estado) ?>"
+            </span>
           </div>
-          <a href="<?= base_url('perfil') ?>" class="dropdown-item"><i class="typcn typcn-user-outline"></i>Mis datos</a>
+          <a href="<?= base_url('perfil') ?>" class="dropdown-item"><i class="typcn typcn-user-outline"></i>Mis
+          datos</a>
           <a href="<?= base_url('logout') ?>" class="dropdown-item"><i class="typcn typcn-power-outline"></i> Salir</a>
         </div><!-- dropdown-menu -->
       </div>
     </div><!-- az-header-right -->
   </div><!-- container -->
 </div><!-- az-header -->
+
