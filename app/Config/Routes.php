@@ -21,13 +21,11 @@ $routes->group('auth', function ($routes) {
 // Protegidas
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Dashboard
-    $routes->get('dashboard', 'DashboardController::index');
-    
+    $routes->get('dashboard', 'DashboardController::index');    
     // Perfil
     $routes->get('perfil', 'AuthController::perfil');
     $routes->post('perfil/actualizar', 'AuthController::actualizarPerfil');
     $routes->post('perfil/cambiar-password', 'AuthController::cambiarPassword');
-    
     // Administración (solo para rol Sistemas)
     $routes->group('admin', function ($routes) {
         $routes->get('usuarios', 'AdminController::index');
