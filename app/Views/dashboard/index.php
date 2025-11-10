@@ -33,7 +33,7 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
 <!-- Título -->
 <div class="az-dashboard-one-title">
   <div>
-    <h2 class="az-dashboard-title">👋 Hola! <b><?= esc($usuario_nombre) ?></b></h2>
+    <h2 class="az-dashboard-title">👋 Hola! <b><?= esc($usuario_alias) ?></b></h2>
     <p class="az-dashboard-text">Que tengas una excelente jornada laboral!! 😄</p>
   </div>
   <div class="az-content-header-right">
