@@ -4,7 +4,10 @@
     <!-- Columna izquierda (logo + título) -->
     <div class="az-column-signup-left">
         <div class="az-signup-header">
-            <i class="typcn typcn-location-arrow-outline"></i>
+            <!-- <i class="typcn typcn-location-arrow-outline"></i> -->
+        <div class="logo-container mb-0">
+            <img src="<?= base_url('assets/images/logo.gif') ?>" alt="Logo SGC" class="logo-gif" style="width: 100px; height: auto;">
+        </div>
             <h1>SGC<span></span></h1>
             <h2>Sistema de Gestión de Concursos</h2>
             <h5 class="text-muted">

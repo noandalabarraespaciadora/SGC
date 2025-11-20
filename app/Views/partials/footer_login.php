@@ -8,6 +8,6 @@
     $(function () {
         'use strict';
     });
-</script>
+ </script>
 </body>
 </html>
