@@ -21,6 +21,10 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
+
+    protected $session;
+    protected $data = [];
+
     /**
      * Instance of the main Request object.
      *
@@ -54,5 +58,16 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+
+
+         $this->session = \Config\Services::session();
+        
+        // Cargar datos del usuario para todas las vistas
+        $this->data['usuario_nombre'] = $this->session->get('usuario_nombre');
+        $this->data['usuario_apellido'] = $this->session->get('usuario_apellido');
+        $this->data['usuario_alias'] = $this->session->get('usuario_alias');
+        $this->data['usuario_rol'] = $this->session->get('usuario_rol');
+        $this->data['usuario_mensaje_estado'] = $this->session->get('usuario_mensaje_estado');
+
     }
 }

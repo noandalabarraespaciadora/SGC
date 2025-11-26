@@ -38,7 +38,7 @@
           <div class="az-menu-sub">
             <div class="container">
               <nav class="nav">
-                <a href="#" class="nav-link">Niveles de Excelencia</a>
+                <a href="<?= base_url('niveles-excelencia') ?>" class="nav-link">Niveles de Excelencia</a>
                 <a href="#" class="nav-link">Modalidades</a>
                 <a href="#" class="nav-link">Representación</a>
                 <a href="#" class="nav-link">Sedes</a>

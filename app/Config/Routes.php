@@ -14,12 +14,8 @@ $routes->group('auth', function ($routes) {
     $routes->post('procesar-login', 'AuthController::procesarLogin');
     $routes->post('procesar-registro', 'AuthController::procesarRegistro');
     $routes->post('solicitar-recuperacion', 'AuthController::solicitarRecuperacion');
-    $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta'); // MOVER AQUÍ
+    $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta'); 
     $routes->post('actualizar-password-recuperacion', 'AuthController::actualizarPasswordRecuperacion'); // MOVER AQUÍ
-    
-    // Rutas antiguas (puedes eliminarlas si ya no las usas)
-    // $routes->get('resetear-password/(:any)', 'AuthController::resetearPassword/$1');
-    // $routes->post('actualizar-password/(:any)', 'AuthController::actualizarPassword/$1');
 });
 
 // Protegidas
@@ -42,5 +38,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('usuarios/cambiar-aprobacion/(:num)', 'AdminController::cambiarAprobacion/$1');
         $routes->get('usuarios/resetear-password/(:num)', 'AdminController::resetearPassword/$1');
         $routes->get('usuarios/cambiar-estado/(:num)/(:any)', 'AdminController::cambiarEstado/$1/$2');
+    });
+
+    // Niveles de Excelencia
+    $routes->group('niveles-excelencia', function ($routes) {
+        $routes->get('/', 'NivelesExcelenciaController::index');
+        $routes->get('nuevo', 'NivelesExcelenciaController::new');
+        $routes->post('crear', 'NivelesExcelenciaController::create');
+        $routes->get('(:num)', 'NivelesExcelenciaController::show/$1');
+        $routes->get('editar/(:num)', 'NivelesExcelenciaController::edit/$1');
+        $routes->post('actualizar/(:num)', 'NivelesExcelenciaController::update/$1');
+        $routes->post('eliminar/(:num)', 'NivelesExcelenciaController::delete/$1');
     });
 });
