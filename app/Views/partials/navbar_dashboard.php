@@ -39,9 +39,9 @@
             <div class="container">
               <nav class="nav">
                 <a href="<?= base_url('niveles-excelencia') ?>" class="nav-link">Niveles de Excelencia</a>
-                <a href="#" class="nav-link">Modalidades</a>
-                <a href="#" class="nav-link">Representación</a>
-                <a href="#" class="nav-link">Sedes</a>
+                <a href="<?= base_url('modalidades') ?>" class="nav-link">Modalidades</a>
+                <a href="<?= base_url('representaciones') ?>" class="nav-link">Representación</a>
+                <a href="<?= base_url('sedes') ?>" class="nav-link">Sedes</a>
                 <a href="#" class="nav-link">Sistema</a>
                 <a href="#" class="nav-link">Tipos de Actividades</a>
                 <a href="#" class="nav-link">Estado de Concurso</a>

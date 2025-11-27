@@ -50,4 +50,36 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'NivelesExcelenciaController::update/$1');
         $routes->post('eliminar/(:num)', 'NivelesExcelenciaController::delete/$1');
     });
+
+        // Modalidades
+    $routes->group('modalidades', function ($routes) {
+        $routes->get('/', 'ModalidadesController::index');
+        $routes->get('nuevo', 'ModalidadesController::new');
+        $routes->post('crear', 'ModalidadesController::create');
+        $routes->get('(:num)', 'ModalidadesController::show/$1');
+        $routes->get('editar/(:num)', 'ModalidadesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'ModalidadesController::update/$1');
+        $routes->post('eliminar/(:num)', 'ModalidadesController::delete/$1');
+    });
+    // Representaciones
+    $routes->group('representaciones', function ($routes) {
+        $routes->get('/', 'RepresentacionesController::index');
+        $routes->get('nuevo', 'RepresentacionesController::new');
+        $routes->post('crear', 'RepresentacionesController::create');
+        $routes->get('(:num)', 'RepresentacionesController::show/$1');
+        $routes->get('editar/(:num)', 'RepresentacionesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'RepresentacionesController::update/$1');
+        $routes->post('eliminar/(:num)', 'RepresentacionesController::delete/$1');
+    });
+
+    // Sedes
+    $routes->group('sedes', function ($routes) {
+        $routes->get('/', 'SedesController::index');
+        $routes->get('nuevo', 'SedesController::new');
+        $routes->post('crear', 'SedesController::create');
+        $routes->get('(:num)', 'SedesController::show/$1');
+        $routes->get('editar/(:num)', 'SedesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'SedesController::update/$1');
+        $routes->post('eliminar/(:num)', 'SedesController::delete/$1');
+    });
 });
