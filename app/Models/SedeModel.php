@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class NivelExcelenciaModel extends Model
+class SedeModel extends Model
 {
-    protected $table            = 'niveles_excelencia';
+    protected $table            = 'sedes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nivel', 'abreviatura'];
+    protected $allowedFields    = ['denominacion', 'direccion', 'email', 'telefono'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -27,22 +27,30 @@ class NivelExcelenciaModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
-    // Validation - SIN reglas de unicidad aquí
+    // Validation
     protected $validationRules = [
-        'nivel' => 'required|max_length[255]',
-        'abreviatura' => 'required|max_length[50]'
+        'denominacion' => 'required|max_length[255]',
+        'direccion' => 'max_length[500]',
+        'email' => 'max_length[100]|valid_email',
+        'telefono' => 'max_length[50]'
     ];
-
     protected $validationMessages = [
-        'nivel' => [
-            'required' => 'El campo nivel es obligatorio.',
-            'max_length' => 'El nivel no puede tener más de 255 caracteres.'
+        'denominacion' => [
+            'required' => 'El campo denominación es obligatorio.',
+            'max_length' => 'La denominación no puede tener más de 255 caracteres.'
         ],
-        'abreviatura' => [
-            'required' => 'El campo abreviatura es obligatorio.',
-            'max_length' => 'La abreviatura no puede tener más de 50 caracteres.'
+        'direccion' => [
+            'max_length' => 'La dirección no puede tener más de 500 caracteres.'
+        ],
+        'email' => [
+            'max_length' => 'El email no puede tener más de 100 caracteres.',
+            'valid_email' => 'El formato del email no es válido.'
+        ],
+        'telefono' => [
+            'max_length' => 'El teléfono no puede tener más de 50 caracteres.'
         ]
     ];
+
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
@@ -57,51 +65,43 @@ class NivelExcelenciaModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-     /**
-     * Validar datos para creación (con unicidad)
-     */
     public function validarCreacion($data)
     {
         $rules = [
-            'nivel' => 'required|max_length[255]|is_unique[niveles_excelencia.nivel]',
-            'abreviatura' => 'required|max_length[50]|is_unique[niveles_excelencia.abreviatura]'
+            'denominacion' => 'required|max_length[255]|is_unique[sedes.denominacion]',
+            'direccion' => 'max_length[500]',
+            'email' => 'max_length[100]|valid_email',
+            'telefono' => 'max_length[50]'
         ];
-
         $this->setValidationRules($rules);
         return $this->validate($data);
     }
 
-    /**
-     * Validar datos para edición (con unicidad excluyendo ID actual)
-     */
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'nivel' => "required|max_length[255]|is_unique[niveles_excelencia.nivel,id,{$id}]",
-            'abreviatura' => "required|max_length[50]|is_unique[niveles_excelencia.abreviatura,id,{$id}]"
+            'denominacion' => "required|max_length[255]|is_unique[sedes.denominacion,id,{$id}]",
+            'direccion' => 'max_length[500]',
+            'email' => 'max_length[100]|valid_email',
+            'telefono' => 'max_length[50]'
         ];
-
         $this->setValidationRules($rules);
         return $this->validate($data);
     }
 
-    /**
-     * Obtener todos los niveles (excluyendo eliminados)
-     */
-    public function getNiveles()
+    public function getSedes()
     {
         return $this->where('deleted_at', null)->findAll();
     }
 
-    /**
-     * Buscar niveles por término
-     */
     public function search($term)
     {
         return $this->where('deleted_at', null)
                     ->groupStart()
-                    ->like('nivel', $term)
-                    ->orLike('abreviatura', $term)
+                    ->like('denominacion', $term)
+                    ->orLike('direccion', $term)
+                    ->orLike('email', $term)
+                    ->orLike('telefono', $term)
                     ->groupEnd()
                     ->findAll();
     }
