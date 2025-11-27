@@ -51,10 +51,10 @@ class RepresentacionModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-     public function validarCreacion($data)
+    public function validarCreacion($data)
     {
         $rules = [
-            'representacion' => 'required|max_length[255]|is_unique[representaciones.representacion]'
+            'representacion' => 'required|max_length[255]|is_unique[representaciones.representacion,deleted_at,]'
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);
@@ -63,7 +63,7 @@ class RepresentacionModel extends Model
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'representacion' => "required|max_length[255]|is_unique[representaciones.representacion,id,{$id}]"
+            'representacion' => "required|max_length[255]|is_unique[representaciones.representacion,id,{$id},deleted_at,]"
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);
@@ -77,7 +77,7 @@ class RepresentacionModel extends Model
     public function search($term)
     {
         return $this->where('deleted_at', null)
-                    ->like('representacion', $term)
-                    ->findAll();
+            ->like('representacion', $term)
+            ->findAll();
     }
 }

@@ -57,52 +57,38 @@ class NivelExcelenciaModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-     /**
-     * Validar datos para creación (con unicidad)
-     */
     public function validarCreacion($data)
     {
         $rules = [
-            'nivel' => 'required|max_length[255]|is_unique[niveles_excelencia.nivel]',
-            'abreviatura' => 'required|max_length[50]|is_unique[niveles_excelencia.abreviatura]'
+            'nivel' => 'required|max_length[255]|is_unique[niveles_excelencia.nivel,deleted_at,]',
+            'abreviatura' => 'required|max_length[50]|is_unique[niveles_excelencia.abreviatura,deleted_at,]'
         ];
-
         $this->setValidationRules($rules);
         return $this->validate($data);
     }
 
-    /**
-     * Validar datos para edición (con unicidad excluyendo ID actual)
-     */
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'nivel' => "required|max_length[255]|is_unique[niveles_excelencia.nivel,id,{$id}]",
-            'abreviatura' => "required|max_length[50]|is_unique[niveles_excelencia.abreviatura,id,{$id}]"
+            'nivel' => "required|max_length[255]|is_unique[niveles_excelencia.nivel,id,{$id},deleted_at,]",
+            'abreviatura' => "required|max_length[50]|is_unique[niveles_excelencia.abreviatura,id,{$id},deleted_at,]"
         ];
-
         $this->setValidationRules($rules);
         return $this->validate($data);
     }
 
-    /**
-     * Obtener todos los niveles (excluyendo eliminados)
-     */
     public function getNiveles()
     {
         return $this->where('deleted_at', null)->findAll();
     }
 
-    /**
-     * Buscar niveles por término
-     */
     public function search($term)
     {
         return $this->where('deleted_at', null)
-                    ->groupStart()
-                    ->like('nivel', $term)
-                    ->orLike('abreviatura', $term)
-                    ->groupEnd()
-                    ->findAll();
+            ->groupStart()
+            ->like('nivel', $term)
+            ->orLike('abreviatura', $term)
+            ->groupEnd()
+            ->findAll();
     }
 }

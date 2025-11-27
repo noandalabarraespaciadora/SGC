@@ -54,7 +54,7 @@ class TipoActividadModel extends Model
     public function validarCreacion($data)
     {
         $rules = [
-            'actividad' => 'required|max_length[255]|is_unique[tipo_actividades.actividad]'
+            'actividad' => 'required|max_length[255]|is_unique[tipo_actividades.actividad,deleted_at,]'
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);
@@ -63,7 +63,7 @@ class TipoActividadModel extends Model
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'actividad' => "required|max_length[255]|is_unique[tipo_actividades.actividad,id,{$id}]"
+            'actividad' => "required|max_length[255]|is_unique[tipo_actividades.actividad,id,{$id},deleted_at,]"
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);

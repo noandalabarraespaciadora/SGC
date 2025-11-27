@@ -55,7 +55,7 @@ class ModalidadModel extends Model
     public function validarCreacion($data)
     {
         $rules = [
-            'modalidad' => 'required|max_length[255]|is_unique[modalidades.modalidad]'
+            'modalidad' => 'required|max_length[255]|is_unique[modalidades.modalidad,deleted_at,]'
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);
@@ -64,7 +64,7 @@ class ModalidadModel extends Model
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'modalidad' => "required|max_length[255]|is_unique[modalidades.modalidad,id,{$id}]"
+            'modalidad' => "required|max_length[255]|is_unique[modalidades.modalidad,id,{$id},deleted_at,]"
         ];
         $this->setValidationRules($rules);
         return $this->validate($data);
@@ -78,7 +78,7 @@ class ModalidadModel extends Model
     public function search($term)
     {
         return $this->where('deleted_at', null)
-                    ->like('modalidad', $term)
-                    ->findAll();
+            ->like('modalidad', $term)
+            ->findAll();
     }
 }

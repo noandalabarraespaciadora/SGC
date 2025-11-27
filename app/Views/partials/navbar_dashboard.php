@@ -44,7 +44,7 @@
                 <a href="<?= base_url('sedes') ?>" class="nav-link">Sedes</a>
                 <a href="#" class="nav-link">Sistema</a>
                 <a href="<?= base_url('tipo-actividades') ?>" class="nav-link">Tipos de Actividades</a>
-                <a href="#" class="nav-link">Estado de Concurso</a>
+                <a href="<?= base_url('estado-concursos') ?>" class="nav-link">Estado de Concurso</a>
               </nav>
             </div>
           </div>

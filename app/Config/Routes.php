@@ -93,4 +93,15 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'TipoActividadesController::update/$1');
         $routes->post('eliminar/(:num)', 'TipoActividadesController::delete/$1');
     });
+
+    // Estado Concursos
+    $routes->group('estado-concursos', function ($routes) {
+        $routes->get('/', 'EstadoConcursosController::index');
+        $routes->get('nuevo', 'EstadoConcursosController::new');
+        $routes->post('crear', 'EstadoConcursosController::create');
+        $routes->get('(:num)', 'EstadoConcursosController::show/$1');
+        $routes->get('editar/(:num)', 'EstadoConcursosController::edit/$1');
+        $routes->post('actualizar/(:num)', 'EstadoConcursosController::update/$1');
+        $routes->post('eliminar/(:num)', 'EstadoConcursosController::delete/$1');
+    });
 });

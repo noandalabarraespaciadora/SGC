@@ -68,7 +68,7 @@ class SedeModel extends Model
     public function validarCreacion($data)
     {
         $rules = [
-            'denominacion' => 'required|max_length[255]|is_unique[sedes.denominacion]',
+            'denominacion' => 'required|max_length[255]|is_unique[sedes.denominacion,deleted_at,]',
             'direccion' => 'max_length[500]',
             'email' => 'max_length[100]|valid_email',
             'telefono' => 'max_length[50]'
@@ -80,7 +80,7 @@ class SedeModel extends Model
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'denominacion' => "required|max_length[255]|is_unique[sedes.denominacion,id,{$id}]",
+            'denominacion' => "required|max_length[255]|is_unique[sedes.denominacion,id,{$id},deleted_at,]",
             'direccion' => 'max_length[500]',
             'email' => 'max_length[100]|valid_email',
             'telefono' => 'max_length[50]'
@@ -97,12 +97,12 @@ class SedeModel extends Model
     public function search($term)
     {
         return $this->where('deleted_at', null)
-                    ->groupStart()
-                    ->like('denominacion', $term)
-                    ->orLike('direccion', $term)
-                    ->orLike('email', $term)
-                    ->orLike('telefono', $term)
-                    ->groupEnd()
-                    ->findAll();
+            ->groupStart()
+            ->like('denominacion', $term)
+            ->orLike('direccion', $term)
+            ->orLike('email', $term)
+            ->orLike('telefono', $term)
+            ->groupEnd()
+            ->findAll();
     }
 }
