@@ -14,7 +14,7 @@ $routes->group('auth', function ($routes) {
     $routes->post('procesar-login', 'AuthController::procesarLogin');
     $routes->post('procesar-registro', 'AuthController::procesarRegistro');
     $routes->post('solicitar-recuperacion', 'AuthController::solicitarRecuperacion');
-    $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta'); 
+    $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta');
     $routes->post('actualizar-password-recuperacion', 'AuthController::actualizarPasswordRecuperacion'); // MOVER AQUÍ
 });
 
@@ -22,12 +22,12 @@ $routes->group('auth', function ($routes) {
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Dashboard
     $routes->get('dashboard', 'DashboardController::index');
-    
+
     // Perfil
     $routes->get('perfil', 'AuthController::perfil');
     $routes->post('perfil/actualizar', 'AuthController::actualizarPerfil');
     $routes->post('perfil/cambiar-password', 'AuthController::cambiarPassword');
-    
+
     // Administración (solo para rol Sistemas)
     $routes->group('admin', function ($routes) {
         $routes->get('usuarios', 'AdminController::index');
@@ -51,7 +51,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('eliminar/(:num)', 'NivelesExcelenciaController::delete/$1');
     });
 
-        // Modalidades
+    // Modalidades
     $routes->group('modalidades', function ($routes) {
         $routes->get('/', 'ModalidadesController::index');
         $routes->get('nuevo', 'ModalidadesController::new');
@@ -81,5 +81,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('editar/(:num)', 'SedesController::edit/$1');
         $routes->post('actualizar/(:num)', 'SedesController::update/$1');
         $routes->post('eliminar/(:num)', 'SedesController::delete/$1');
+    });
+
+    // Tipo Actividades
+    $routes->group('tipo-actividades', function ($routes) {
+        $routes->get('/', 'TipoActividadesController::index');
+        $routes->get('nuevo', 'TipoActividadesController::new');
+        $routes->post('crear', 'TipoActividadesController::create');
+        $routes->get('(:num)', 'TipoActividadesController::show/$1');
+        $routes->get('editar/(:num)', 'TipoActividadesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'TipoActividadesController::update/$1');
+        $routes->post('eliminar/(:num)', 'TipoActividadesController::delete/$1');
     });
 });
