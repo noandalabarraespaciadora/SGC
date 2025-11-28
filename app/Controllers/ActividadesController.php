@@ -64,9 +64,10 @@ class ActividadesController extends BaseController
         $view = $this->request->getGet('view') ?? 'month';
         $date = $this->request->getGet('date') ?? date('Y-m-d');
 
-        // Obtener actividades para el mes actual
-        $startDate = date('Y-m-01', strtotime($date));
-        $endDate = date('Y-m-t', strtotime($date));
+        // Obtener actividades para un rango amplio (1 año antes y 1 año después)
+        // Esto permite navegar por el calendario sin recargar
+        $startDate = date('Y-m-01', strtotime('-1 year', strtotime($date)));
+        $endDate = date('Y-m-t', strtotime('+1 year', strtotime($date)));
 
         $actividades = $this->model->getActividadesCalendario($startDate, $endDate);
 

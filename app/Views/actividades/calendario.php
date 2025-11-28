@@ -514,6 +514,11 @@
     let currentDate = new Date('<?= $currentDate ?>');
     let currentView = '<?= $currentView ?>';
 
+    // Log inicial para depuración
+    console.log('=== CALENDARIO INICIADO ===');
+    console.log('Total actividades cargadas:', actividades.length);
+    console.log('Actividades:', actividades);
+
     $(document).ready(function() {
         // Inicializar calendario
         renderCalendar();
@@ -743,8 +748,29 @@
     }
 
     function getActividadesForDate(date) {
-        const dateString = date.toISOString().split('T')[0];
-        return actividades.filter(actividad => actividad.fecha === dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
+
+        console.log('Buscando actividades para:', dateString);
+
+        const result = actividades.filter(actividad => {
+            // Manejar si actividad.fecha tiene hora o es solo fecha
+            let actDate = actividad.fecha;
+            if (actDate && actDate.includes(' ')) {
+                actDate = actDate.split(' ')[0];
+            }
+
+            const match = actDate === dateString;
+            if (match) {
+                console.log('✓ Actividad encontrada:', actividad.titulo, 'fecha:', actDate);
+            }
+            return match;
+        });
+
+        console.log(`Total actividades para ${dateString}:`, result.length);
+        return result;
     }
 
     function mostrarDetalleActividad(actividadId) {
