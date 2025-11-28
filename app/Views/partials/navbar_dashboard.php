@@ -28,7 +28,7 @@
         <li class="nav-item">
           <a href="#" class="nav-link with-sub"><i class="typcn typcn-puzzle-outline"></i> Módulos</a>
           <nav class="az-menu-sub">
-            <a href="#" class="nav-link">Actividades</a>
+            <a href="<?= base_url('actividades') ?>" class="nav-link">Actividades</a>
             <a href="#" class="nav-link">Biblioteca</a>
             <a href="#" class="nav-link">Concursos</a>
           </nav>

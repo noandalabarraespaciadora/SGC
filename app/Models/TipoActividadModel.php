@@ -12,7 +12,7 @@ class TipoActividadModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['actividad'];
+    protected $allowedFields    = ['actividad', 'color'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -29,12 +29,17 @@ class TipoActividadModel extends Model
 
     // Validation
     protected $validationRules = [
-        'actividad' => 'required|max_length[255]'
+        'actividad' => 'required|max_length[255]',
+        'color' => 'required|max_length[7]'
     ];
     protected $validationMessages = [
         'actividad' => [
             'required' => 'El campo actividad es obligatorio.',
             'max_length' => 'La actividad no puede tener más de 255 caracteres.'
+        ],
+        'color' => [
+            'required' => 'El campo color es obligatorio.',
+            'max_length' => 'El color no puede tener más de 7 caracteres.'
         ]
     ];
     protected $skipValidation       = false;
@@ -54,19 +59,50 @@ class TipoActividadModel extends Model
     public function validarCreacion($data)
     {
         $rules = [
-            'actividad' => 'required|max_length[255]|is_unique[tipo_actividades.actividad,deleted_at,]'
+            'actividad' => 'required|max_length[255]',
+            'color'     => 'required|max_length[7]'
         ];
-        $this->setValidationRules($rules);
-        return $this->validate($data);
+
+        if (!$this->validate($data, $rules)) {
+            return false;
+        }
+
+        // Verificar unicidad sin contar eliminados
+        $existe = $this->where('actividad', $data['actividad'])
+            ->where('deleted_at', null)
+            ->first();
+
+        if ($existe) {
+            $this->setError('actividad', 'El nombre de la actividad ya existe.');
+            return false;
+        }
+
+        return true;
     }
 
     public function validarEdicion($data, $id)
     {
         $rules = [
-            'actividad' => "required|max_length[255]|is_unique[tipo_actividades.actividad,id,{$id},deleted_at,]"
+            'actividad' => 'required|max_length[255]',
+            'color'     => 'required|max_length[7]'
         ];
-        $this->setValidationRules($rules);
-        return $this->validate($data);
+
+        if (!$this->validate($data, $rules)) {
+            return false;
+        }
+
+        // Verificar unicidad excluyendo el propio registro y los eliminados
+        $existe = $this->where('actividad', $data['actividad'])
+            ->where('id !=', $id)
+            ->where('deleted_at', null)
+            ->first();
+
+        if ($existe) {
+            $this->seterror('actividad', 'El nombre de la actividad ya existe.');
+            return false;
+        }
+
+        return true;
     }
 
     public function getTipoActividades()

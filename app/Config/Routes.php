@@ -104,4 +104,18 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'EstadoConcursosController::update/$1');
         $routes->post('eliminar/(:num)', 'EstadoConcursosController::delete/$1');
     });
+
+    // Actividades
+    $routes->group('actividades', function ($routes) {
+        $routes->get('/', 'ActividadesController::index');
+        $routes->get('calendario', 'ActividadesController::calendario');
+        $routes->get('lista', 'ActividadesController::lista');
+        $routes->get('nuevo', 'ActividadesController::new');
+        $routes->post('crear', 'ActividadesController::create');
+        $routes->get('(:num)', 'ActividadesController::show/$1');
+        $routes->get('editar/(:num)', 'ActividadesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'ActividadesController::update/$1');
+        $routes->post('eliminar/(:num)', 'ActividadesController::delete/$1');
+        $routes->get('api/actividades', 'ActividadesController::apiActividades');
+    });
 });
