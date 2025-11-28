@@ -33,6 +33,18 @@
                 <div class="form-text">Máximo 255 caracteres. Debe ser único en el sistema.</div>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Color <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="color" class="form-control form-control-color" name="color"
+                        value="<?= old('color', '#007bff') ?>" title="Seleccione un color" required>
+                    <input type="text" class="form-control" name="color_text"
+                        value="<?= old('color', '#007bff') ?>" maxlength="7"
+                        placeholder="#007bff" pattern="^#[0-9A-Fa-f]{6}$" required>
+                </div>
+                <div class="form-text">Seleccione un color para identificar este tipo de actividad.</div>
+            </div>
+
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-save"></i> Guardar
             </button>
@@ -42,4 +54,23 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const colorPicker = document.querySelector('input[name="color"]');
+        const colorText = document.querySelector('input[name="color_text"]');
+
+        // Sincronizar color picker con texto
+        colorPicker.addEventListener('input', function() {
+            colorText.value = this.value;
+        });
+
+        // Sincronizar texto con color picker (con validación)
+        colorText.addEventListener('input', function() {
+            if (this.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+                colorPicker.value = this.value;
+            }
+        });
+    });
+</script>
 <?php $this->endSection() ?>

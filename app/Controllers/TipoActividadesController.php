@@ -46,7 +46,8 @@ class TipoActividadesController extends BaseController
 
         $data = array_merge($this->data, [
             'title' => 'Detalle de Tipo de Actividad - SGC',
-            'tipoActividad' => $tipoActividad
+            'tipoActividad' => $tipoActividad,
+            'color' => $tipoActividad['color']
         ]);
 
         return view('tipo_actividades/show', $data);
@@ -67,7 +68,10 @@ class TipoActividadesController extends BaseController
             return redirect()->back()->with('error', 'Token de seguridad inválido.');
         }
 
-        $data = ['actividad' => $this->request->getPost('actividad')];
+        $data = [
+            'actividad' => $this->request->getPost('actividad'),
+            'color' => $this->request->getPost('color')
+        ];
 
         if (!$this->model->validarCreacion($data)) {
             return redirect()->back()->withInput()->with('errors', $this->model->errors());
@@ -99,7 +103,10 @@ class TipoActividadesController extends BaseController
             return redirect()->back()->with('error', 'Token de seguridad inválido.');
         }
 
-        $data = ['actividad' => $this->request->getPost('actividad')];
+        $data = [
+            'actividad' => $this->request->getPost('actividad'),
+            'color' => $this->request->getPost('color')
+        ];
 
         if (!$this->model->validarEdicion($data, $id)) {
             return redirect()->back()->withInput()->with('errors', $this->model->errors());

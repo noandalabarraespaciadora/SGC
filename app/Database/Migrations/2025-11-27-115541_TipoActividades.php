@@ -6,7 +6,7 @@ use CodeIgniter\Database\Migration;
 
 class TipoActividades extends Migration
 {
-     public function up()
+    public function up()
     {
         $this->forge->addField([
             'id' => [
@@ -19,6 +19,12 @@ class TipoActividades extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '255',
                 'null' => false,
+            ],
+            'color' => [
+                'type' => 'VARCHAR',
+                'constraint' => '7',
+                'null' => false,
+                'default' => '#007bff',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -35,7 +41,6 @@ class TipoActividades extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey('actividad');
         $this->forge->createTable('tipo_actividades');
     }
 

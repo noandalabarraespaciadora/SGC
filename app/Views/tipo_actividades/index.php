@@ -50,13 +50,14 @@
                     <tr>
                         <th>#</th>
                         <th>Tipo de Actividad</th>
+                        <th>Color</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($tipoActividades)): ?>
                         <tr>
-                            <td colspan="3" class="text-center text-muted py-4">
+                            <td colspan="4" class="text-center text-muted py-4">
                                 No se encontraron tipos de actividades.
                             </td>
                         </tr>
@@ -65,6 +66,11 @@
                             <tr>
                                 <td><?= $index + 1 ?></td>
                                 <td><?= esc($tipoActividad['actividad']) ?></td>
+                                <td>
+                                    <span class="badge" style="background-color: <?= esc($tipoActividad['color']) ?>; color: white; padding: 0.25rem 0.5rem;">
+                                        <?= esc($tipoActividad['color']) ?>
+                                    </span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
                                         <a href="<?= base_url("tipo-actividades/{$tipoActividad['id']}") ?>"

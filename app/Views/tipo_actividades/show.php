@@ -12,6 +12,12 @@
     <div class="card-body">
         <h5><strong>Tipo de Actividad:</strong> <?= esc($tipoActividad['actividad']) ?></h5>
         <hr>
+        <p>
+            <strong>Color:</strong>
+            <span class="badge" style="background-color: <?= esc($tipoActividad['color']) ?>; color: white; padding: 0.5rem;">
+                <?= esc($tipoActividad['color']) ?>
+            </span>
+        </p>
         <p><strong>Fecha de creación:</strong> <?= date('d/m/Y H:i', strtotime($tipoActividad['created_at'])) ?></p>
         <?php if ($tipoActividad['updated_at'] && $tipoActividad['updated_at'] != $tipoActividad['created_at']): ?>
             <p><strong>Última actualización:</strong> <?= date('d/m/Y H:i', strtotime($tipoActividad['updated_at'])) ?></p>
