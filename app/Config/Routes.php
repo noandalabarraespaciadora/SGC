@@ -118,4 +118,15 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('eliminar/(:num)', 'ActividadesController::delete/$1');
         $routes->get('api/actividades', 'ActividadesController::apiActividades');
     });
+
+    // Rutas para Biblioteca (Agrupadas)
+    $routes->group('biblioteca', function ($routes) {
+        $routes->get('/', 'BibliotecaController::index');
+        $routes->get('nuevo', 'BibliotecaController::new');
+        $routes->post('crear', 'BibliotecaController::create');
+        $routes->get('(:num)', 'BibliotecaController::show/$1');
+        $routes->get('editar/(:num)', 'BibliotecaController::edit/$1');
+        $routes->post('actualizar/(:num)', 'BibliotecaController::update/$1');
+        $routes->post('eliminar/(:num)', 'BibliotecaController::delete/$1');
+    });
 });
