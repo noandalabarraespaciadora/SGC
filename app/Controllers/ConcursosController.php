@@ -63,7 +63,8 @@ class ConcursosController extends BaseController
         $data = array_merge($this->data, [
             'title' => 'Concursos - SGC',
             'concursos' => $concursos,
-            'search' => $search
+            'search' => $search,
+            'estados' => $this->estadoModel->getEstadoConcursos()
         ]);
 
         return view('concursos/index', $data);

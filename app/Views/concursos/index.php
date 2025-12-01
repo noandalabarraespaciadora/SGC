@@ -85,7 +85,7 @@
                             </tr>
                         <?php else: ?>
                             <?php foreach ($concursos as $concurso): ?>
-                                <tr>
+                                <tr data-estado-id="<?= $concurso['id_estado_concurso'] ?? '' ?>">
                                     <td class="align-middle">
                                         <div class="concurso-expediente-list"><?= esc($concurso['numero_expediente']) ?></div>
                                     </td>
@@ -319,15 +319,18 @@
             const estadoId = $(this).val();
 
             $('tbody tr').each(function() {
-                const estadoElement = $(this).find('.concurso-estado');
-                const estadoText = estadoElement.text().toLowerCase();
+                const rowEstadoId = $(this).data('estado-id');
 
                 if (!estadoId) {
+                    // Mostrar todos si no hay filtro seleccionado
                     $(this).show();
                 } else {
-                    // En una implementación real, aquí compararíamos por ID
-                    // Por ahora solo mostramos/ocultamos
-                    $(this).show();
+                    // Mostrar solo los que coinciden con el estado seleccionado
+                    if (rowEstadoId == estadoId) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
                 }
             });
         });
