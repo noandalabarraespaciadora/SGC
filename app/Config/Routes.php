@@ -129,4 +129,15 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'BibliotecaController::update/$1');
         $routes->post('eliminar/(:num)', 'BibliotecaController::delete/$1');
     });
+
+    // Rutas para Docentes (Agrupadas)
+    $routes->group('docentes', function ($routes) {
+        $routes->get('/', 'DocentesController::index');
+        $routes->get('nuevo', 'DocentesController::new');
+        $routes->post('crear', 'DocentesController::create');
+        $routes->get('(:num)', 'DocentesController::show/$1');
+        $routes->get('editar/(:num)', 'DocentesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'DocentesController::update/$1');
+        $routes->post('eliminar/(:num)', 'DocentesController::delete/$1');
+    });
 });

@@ -23,7 +23,7 @@
         </li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-zoom-outline"></i> Buscar</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-group-outline"></i> Postulantes</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a>
+        <li class="nav-item"><a href="<?= base_url('docentes') ?>" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link with-sub"><i class="typcn typcn-puzzle-outline"></i> Módulos</a>
