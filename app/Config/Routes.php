@@ -140,4 +140,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'DocentesController::update/$1');
         $routes->post('eliminar/(:num)', 'DocentesController::delete/$1');
     });
+
+    // Rutas para Concursos (Agrupadas)
+    $routes->group('concursos', function ($routes) {
+        $routes->get('/', 'ConcursosController::index');
+        $routes->get('nuevo', 'ConcursosController::new');
+        $routes->post('crear', 'ConcursosController::create');
+        $routes->get('(:num)', 'ConcursosController::show/$1');
+        $routes->get('editar/(:num)', 'ConcursosController::edit/$1');
+        $routes->post('actualizar/(:num)', 'ConcursosController::update/$1');
+        $routes->post('eliminar/(:num)', 'ConcursosController::delete/$1');
+        $routes->get('postulantes/(:num)', 'ConcursosController::postulantes/$1');
+    });
 });
