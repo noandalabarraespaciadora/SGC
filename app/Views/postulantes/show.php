@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_buena_conducta'], 10) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_buena_conducta'], 10) ?>
                             </div>
                         </div>
 
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_antiguedad'], 180) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_antiguedad'], 180) ?>
                             </div>
                         </div>
 
@@ -191,7 +191,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_sanciones'], 180) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_sanciones'], 180) ?>
                             </div>
                         </div>
 
@@ -223,7 +223,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_redam'], 60) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_redam'], 60) ?>
                             </div>
                         </div>
 
@@ -235,7 +235,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_rupv'], 60) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_rupv'], 60) ?>
                             </div>
                         </div>
 
@@ -247,7 +247,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['psicofisico'], 180) ?>
+                                <?= verificarVigenciaDocumento($postulante['psicofisico'], 180) ?>
                             </div>
                         </div>
 
@@ -259,7 +259,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_certificado_domicilio'], 10) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_certificado_domicilio'], 10) ?>
                             </div>
                         </div>
 
@@ -271,7 +271,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['d_informacion_sumaria'], 365) ?>
+                                <?= verificarVigenciaDocumento($postulante['d_informacion_sumaria'], 365) ?>
                             </div>
                         </div>
 
@@ -290,7 +290,7 @@
                                 </div>
                             </div>
                             <div>
-                                <?= $this->verificarVigenciaDocumento($postulante['estudios_psicofisicos_fecha'], 730) ?>
+                                <?= verificarVigenciaDocumento($postulante['estudios_psicofisicos_fecha'], 730) ?>
                             </div>
                         </div>
                     </div>
@@ -333,30 +333,3 @@
 </style>
 
 <?php $this->endSection() ?>
-
-<?php
-// Función helper para verificar vigencia de documentos
-if (!function_exists('verificarVigenciaDocumento')) {
-    function verificarVigenciaDocumento($fechaDocumento, $diasVigencia)
-    {
-        if (!$fechaDocumento) {
-            return '<span class="badge bg-secondary">No presentado</span>';
-        }
-
-        $fechaDoc = new DateTime($fechaDocumento);
-        $hoy = new DateTime();
-        $fechaVencimiento = clone $fechaDoc;
-        $fechaVencimiento->modify("+{$diasVigencia} days");
-
-        $diasRestantes = $hoy->diff($fechaVencimiento)->days;
-
-        if ($fechaVencimiento < $hoy) {
-            return '<span class="badge bg-danger">Vencido</span>';
-        } elseif ($diasRestantes <= 7) {
-            return '<span class="badge bg-warning">Por vencer (' . $diasRestantes . ' días)</span>';
-        } else {
-            return '<span class="badge bg-success">Vigente (' . $diasRestantes . ' días)</span>';
-        }
-    }
-}
-?>
