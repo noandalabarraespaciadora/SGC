@@ -4,8 +4,12 @@
 <div class="az-header">
   <div class="container">
     <div class="az-header-left">
-      <h2 class="text-default">
+      <!-- <h2 class="text-default">
         <i class="typcn typcn-location-arrow-outline"></i>
+        <a href="<?= base_url('/') ?>">SGC</a>
+      </h2> -->
+      <h2 class="text-default">
+        <img src="<?= base_url('assets/images/paperplane.gif') ?>" alt="SGC Logo" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px;">
         <a href="<?= base_url('/') ?>">SGC</a>
       </h2>
       <a href="#" id="azMenuShow" class="az-header-menu-icon d-lg-none"><span></span></a>
@@ -13,8 +17,12 @@
 
     <div class="az-header-menu" id="azHeaderMenu">
       <div class="az-header-menu-header">
-        <h2 class="text-default"><i class="typcn typcn-location-arrow-outline"></i><a
-            href="<?= base_url('/') ?>">SGC</a></h2>
+        <!-- <h2 class="text-default"><i class="typcn typcn-location-arrow-outline"></i><a
+            href="<?= base_url('/') ?>">SGC</a></h2> -->
+        <h2 class="text-default">
+          <img src="<?= base_url('assets/images/paperplane.gif') ?>" alt="SGC Logo" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px;">
+          <a href="<?= base_url('/') ?>">SGC</a>
+        </h2>
         <a href="#" class="close" id="azMenuClose">&times;</a>
       </div>
       <ul class="nav">
@@ -28,9 +36,9 @@
         <li class="nav-item">
           <a href="#" class="nav-link with-sub"><i class="typcn typcn-puzzle-outline"></i> Módulos</a>
           <nav class="az-menu-sub">
-            <a href="<?= base_url('actividades') ?>" class="nav-link">Actividades</a>
-            <a href="<?= base_url('biblioteca') ?>" class="nav-link">Biblioteca</a>
-            <a href="<?= base_url('concursos') ?>" class="nav-link">Concursos</a>
+            <a href="<?= base_url('actividades') ?>" class="nav-link">📢 Actividades</a>
+            <a href="<?= base_url('biblioteca') ?>" class="nav-link">📚 Biblioteca</a>
+            <a href="<?= base_url('concursos') ?>" class="nav-link">🏆 Concursos</a>
           </nav>
         </li>
         <li class="nav-item">
@@ -38,13 +46,13 @@
           <div class="az-menu-sub">
             <div class="container">
               <nav class="nav">
-                <a href="<?= base_url('niveles-excelencia') ?>" class="nav-link">Niveles de Excelencia</a>
-                <a href="<?= base_url('modalidades') ?>" class="nav-link">Modalidades</a>
-                <a href="<?= base_url('representaciones') ?>" class="nav-link">Representación</a>
-                <a href="<?= base_url('sedes') ?>" class="nav-link">Sedes</a>
-                <a href="#" class="nav-link">Sistema</a>
-                <a href="<?= base_url('tipo-actividades') ?>" class="nav-link">Tipos de Actividades</a>
-                <a href="<?= base_url('estado-concursos') ?>" class="nav-link">Estado de Concurso</a>
+                <a href="<?= base_url('estado-concursos') ?>" class="nav-link"> 📰 Estado de Concurso</a>
+                <a href="<?= base_url('modalidades') ?>" class="nav-link">🎯 Modalidades</a>
+                <a href="<?= base_url('niveles-excelencia') ?>" class="nav-link">🎖️ Niveles de Excelencia</a>
+                <a href="<?= base_url('representaciones') ?>" class="nav-link"> 👨🏻‍💼 Representación</a>
+                <a href="<?= base_url('sedes') ?>" class="nav-link"> 🏫 Sedes</a>
+                <a href="#" class="nav-link"> 🛠️ Sistema</a>
+                <a href="<?= base_url('tipo-actividades') ?>" class="nav-link"> 🧾 Tipos de Actividades</a>
               </nav>
             </div>
           </div>
