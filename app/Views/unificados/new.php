@@ -45,7 +45,7 @@
 
             <div class="mt-4">
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> Guardar Unificación
+                    <i class="fas fa-save"></i> Guardar
                 </button>
                 <a href="<?= base_url('unificados') ?>" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Cancelar
