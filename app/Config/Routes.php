@@ -15,7 +15,7 @@ $routes->group('auth', function ($routes) {
     $routes->post('procesar-registro', 'AuthController::procesarRegistro');
     $routes->post('solicitar-recuperacion', 'AuthController::solicitarRecuperacion');
     $routes->post('verificar-respuesta', 'AuthController::verificarRespuesta');
-    $routes->post('actualizar-password-recuperacion', 'AuthController::actualizarPasswordRecuperacion'); // MOVER AQUÍ
+    $routes->post('actualizar-password-recuperacion', 'AuthController::actualizarPasswordRecuperacion');
 });
 
 // Protegidas
@@ -152,5 +152,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'ConcursosController::update/$1');
         $routes->post('eliminar/(:num)', 'ConcursosController::delete/$1');
         $routes->get('postulantes/(:num)', 'ConcursosController::postulantes/$1');
+    });
+
+    // Rutas para Unificados (Agrupadas)
+    $routes->group('unificados', function ($routes) {
+        $routes->get('/', 'UnificadosController::index');
+        $routes->get('nuevo', 'UnificadosController::new');
+        $routes->post('crear', 'UnificadosController::create');
+        $routes->get('(:num)', 'UnificadosController::show/$1');
+        $routes->get('editar/(:num)', 'UnificadosController::edit/$1');
+        $routes->post('actualizar/(:num)', 'UnificadosController::update/$1');
+        $routes->post('eliminar/(:num)', 'UnificadosController::delete/$1');
     });
 });

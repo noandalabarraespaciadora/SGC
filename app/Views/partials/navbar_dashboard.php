@@ -53,6 +53,7 @@
                 <a href="<?= base_url('sedes') ?>" class="nav-link"> 🏫 Sedes</a>
                 <a href="#" class="nav-link"> 🛠️ Sistema</a>
                 <a href="<?= base_url('tipo-actividades') ?>" class="nav-link"> 🧾 Tipos de Actividades</a>
+                <a href="<?= base_url('unificados') ?>" class="nav-link"> 🔗 Unificados</a>
               </nav>
             </div>
           </div>
