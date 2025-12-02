@@ -57,7 +57,7 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
           <h6 class="card-title fs-6 fs-md-5 mb-1">🏆 Concursos</h6>
           <p class="text-muted small mb-0">Consulte los últimos concursos registrados.</p>
         </div>
-        <a href="#" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos los concursos</a>
+        <a href=" <?= base_url('concursos') ?>" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos los concursos</a>
       </div>
       <div class="card-body">
         <div class="table-responsive">
