@@ -164,4 +164,15 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'UnificadosController::update/$1');
         $routes->post('eliminar/(:num)', 'UnificadosController::delete/$1');
     });
+
+    // Rutas para Postulantes (Agrupadas)
+    $routes->group('postulantes', function ($routes) {
+        $routes->get('/', 'PostulantesController::index');
+        $routes->get('nuevo', 'PostulantesController::new');
+        $routes->post('crear', 'PostulantesController::create');
+        $routes->get('(:num)', 'PostulantesController::show/$1');
+        $routes->get('editar/(:num)', 'PostulantesController::edit/$1');
+        $routes->post('actualizar/(:num)', 'PostulantesController::update/$1');
+        $routes->post('eliminar/(:num)', 'PostulantesController::delete/$1');
+    });
 });
