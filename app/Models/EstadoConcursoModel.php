@@ -81,4 +81,9 @@ class EstadoConcursoModel extends Model
             ->like('denominacion', $term)
             ->findAll();
     }
+
+    public function getEstados()
+    {
+        return $this->orderBy('denominacion', 'ASC')->findAll();
+    }
 }

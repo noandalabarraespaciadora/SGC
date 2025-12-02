@@ -144,6 +144,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Rutas para Concursos (Agrupadas)
     $routes->group('concursos', function ($routes) {
         $routes->get('/', 'ConcursosController::index');
+        $routes->get('cambiar-vista/(:any)', 'ConcursosController::cambiarVista/$1');
         $routes->get('nuevo', 'ConcursosController::new');
         $routes->post('crear', 'ConcursosController::create');
         $routes->get('(:num)', 'ConcursosController::show/$1');

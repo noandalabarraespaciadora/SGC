@@ -27,7 +27,6 @@ class ConcursosController extends BaseController
     protected $nivelModel;
     protected $docenteModel;
 
-
     protected $data = [];
 
     public function __construct()
@@ -58,16 +57,36 @@ class ConcursosController extends BaseController
             $concurso['comision'] = $this->model->getComision($concurso['id']);
             $concurso['postulantes'] = $this->model->getPostulantes($concurso['id']);
             $concurso['estadisticas'] = $this->model->getEstadisticas($concurso['id']);
+
+            // Asegurar que exista estado_denominacion
+            if (!isset($concurso['estado_denominacion']) && isset($concurso['estado_nombre'])) {
+                $concurso['estado_denominacion'] = $concurso['estado_nombre'];
+            }
         }
+
+        // Determinar vista preferida
+        $vista = $this->request->getGet('vista') ?? session()->get('concursos_vista') ?? 'lista';
+        session()->set('concursos_vista', $vista);
 
         $data = array_merge($this->data, [
             'title' => 'Concursos - SGC',
             'concursos' => $concursos,
             'search' => $search,
-            'estados' => $this->estadoModel->getEstadoConcursos()
+            'estados' => $this->estadoModel->getEstados(),
+            'vista_actual' => $vista
         ]);
 
         return view('concursos/index', $data);
+    }
+
+    // Nuevo método para cambiar vista
+    public function cambiarVista($vista = 'lista')
+    {
+        $vistasPermitidas = ['lista', 'catalogo'];
+        if (in_array($vista, $vistasPermitidas)) {
+            session()->set('concursos_vista', $vista);
+        }
+        return redirect()->to('concursos');
     }
 
     public function show($id = null)
@@ -83,7 +102,7 @@ class ConcursosController extends BaseController
         // Obtener nombres de relaciones
         if ($concurso['id_estado_concurso']) {
             $estado = $this->estadoModel->find($concurso['id_estado_concurso']);
-            $concurso['estado_nombre'] = $estado['denominacion'] ?? '';
+            $concurso['estado_denominacion'] = $estado['nombre'] ?? '';
         }
 
         if ($concurso['id_unificado']) {
@@ -103,7 +122,7 @@ class ConcursosController extends BaseController
     {
         $data = array_merge($this->data, [
             'title' => 'Nuevo Concurso - SGC',
-            'estados' => $this->estadoModel->getEstadoConcursos(),
+            'estados' => $this->estadoModel->getEstados(),
             'unificados' => $this->unificadoModel->getUnificados(),
             'representaciones' => $this->representacionModel->getRepresentaciones(),
             'docentes' => $this->docenteModel->getDocentes(),
@@ -167,7 +186,7 @@ class ConcursosController extends BaseController
         $data = array_merge($this->data, [
             'title' => 'Editar Concurso - SGC',
             'concurso' => $concurso,
-            'estados' => $this->estadoModel->getEstadoConcursos(),
+            'estados' => $this->estadoModel->getEstados(),
             'unificados' => $this->unificadoModel->getUnificados(),
             'representaciones' => $this->representacionModel->getRepresentaciones(),
             'docentes' => $this->docenteModel->getDocentes(),

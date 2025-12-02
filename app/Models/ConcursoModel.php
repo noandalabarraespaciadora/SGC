@@ -97,10 +97,10 @@ class ConcursoModel extends Model
         return $this->validate($data);
     }
 
-    // Métodos para obtener concursos con relaciones
+    // En el método getConcursos() de ConcursoModel
     public function getConcursos()
     {
-        return $this->select('concursos.*, estado_concursos.denominacion as estado_denominacion, unificado.denominacion as unificado_denominacion')
+        return $this->select('concursos.*, estado_concursos.denominacion as estado_denominacion, unificado.denominacion as unificado_nombre')
             ->join('estado_concursos', 'estado_concursos.id = concursos.id_estado_concurso', 'left')
             ->join('unificado', 'unificado.id = concursos.id_unificado', 'left')
             ->where('concursos.deleted_at', null)
