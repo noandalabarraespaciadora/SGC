@@ -87,10 +87,10 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
         <div class="card shadow-sm h-100">
           <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start gap-2">
             <div>
-              <h6 class="card-title fs-6 fs-md-5 mb-1">🏆 Docente</h6>
+              <h6 class="card-title fs-6 fs-md-5 mb-1">🏆 Docentes</h6>
               <p class="text-muted small mb-0">Resumen de docentes.</p>
             </div>
-            <a href="#" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos</a>
+            <a href=" <?= base_url('docentes') ?>" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos</a>
           </div>
           <div class="card-body">
             <div id="flotChart1" class="flot-chart d-flex justify-content-center align-items-center text-muted"
@@ -109,6 +109,7 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
               <small>0.86 %</small>
             </h6>
             <p class="text-muted small mb-0">Total Users</p>
+            <a href=" <?= base_url('postulantes') ?>" class="btn btn-primary btn-sm mt-2 mt-sm-0">Ver todos</a>
           </div>
           <div class="card-body">
             <div id="flotChart2" class="flot-chart d-flex justify-content-center align-items-center text-muted"
