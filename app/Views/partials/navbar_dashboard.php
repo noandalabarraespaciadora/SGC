@@ -27,14 +27,14 @@
       </div>
       <ul class="nav">
         <li class="nav-item active show">
-          <a href="<?= base_url('/') ?>" class="nav-link"><i class="typcn typcn-star-outline"></i>Panel Principal</a>
+          <a href="<?= base_url('/') ?>" class="nav-link"> ⭐Panel Principal</a>
         </li>
-        <li class="nav-item"><a href="<?= base_url('buscar') ?>" class="nav-link"><i class="typcn typcn-zoom-outline"></i> Buscar</a></li>
-        <li class="nav-item"><a href="<?= base_url('postulantes') ?>" class="nav-link"><i class="typcn typcn-group-outline"></i> Postulantes</a></li>
-        <li class="nav-item"><a href="<?= base_url('docentes') ?>" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a>
+        <li class="nav-item"><a href="<?= base_url('buscar') ?>" class="nav-link">🔎 Buscar</a></li>
+        <li class="nav-item"><a href="<?= base_url('postulantes') ?>" class="nav-link">👥 Postulantes</a></li>
+        <li class="nav-item"><a href="<?= base_url('docentes') ?>" class="nav-link">🎓 Docentes</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link with-sub"><i class="typcn typcn-puzzle-outline"></i> Módulos</a>
+          <a href="#" class="nav-link with-sub">🧩 Módulos</a>
           <nav class="az-menu-sub">
             <a href="<?= base_url('actividades') ?>" class="nav-link">📢 Actividades</a>
             <a href="<?= base_url('biblioteca') ?>" class="nav-link">📚 Biblioteca</a>
@@ -43,7 +43,7 @@
           </nav>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link with-sub"><i class="typcn typcn-cog-outline"></i> Configuración</a>
+          <a href="#" class="nav-link with-sub">⚙️ Configuración</a>
           <div class="az-menu-sub">
             <div class="container">
               <nav class="nav">
