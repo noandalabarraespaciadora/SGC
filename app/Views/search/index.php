@@ -4,18 +4,6 @@
 <div class="az-content az-content-dashboard">
     <div class="container">
         <div class="az-content-body">
-
-            <!-- Header del módulo -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="az-dashboard-title">🔍 Búsqueda</h2>
-                    <p class="az-dashboard-text">Busca postulantes y docentes de manera rápida y eficiente</p>
-                </div>
-                <div>
-                    <!-- Puedes agregar botones adicionales aquí si los necesitas -->
-                </div>
-            </div>
-
             <!-- Mensajes flash -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show">
