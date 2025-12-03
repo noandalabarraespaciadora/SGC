@@ -175,4 +175,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('actualizar/(:num)', 'PostulantesController::update/$1');
         $routes->post('eliminar/(:num)', 'PostulantesController::delete/$1');
     });
+
+    // Rutas para Buscar (Agrupadas)
+    $routes->get('buscar', 'SearchController::index');
+    $routes->get('search', 'SearchController::index');
+    $routes->get('search/search', 'SearchController::search');
 });

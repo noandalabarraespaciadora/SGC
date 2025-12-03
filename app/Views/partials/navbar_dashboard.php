@@ -29,7 +29,7 @@
         <li class="nav-item active show">
           <a href="<?= base_url('/') ?>" class="nav-link"><i class="typcn typcn-star-outline"></i>Panel Principal</a>
         </li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="typcn typcn-zoom-outline"></i> Buscar</a></li>
+        <li class="nav-item"><a href="<?= base_url('buscar') ?>" class="nav-link"><i class="typcn typcn-zoom-outline"></i> Buscar</a></li>
         <li class="nav-item"><a href="<?= base_url('postulantes') ?>" class="nav-link"><i class="typcn typcn-group-outline"></i> Postulantes</a></li>
         <li class="nav-item"><a href="<?= base_url('docentes') ?>" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Docentes</a>
         </li>

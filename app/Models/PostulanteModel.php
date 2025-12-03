@@ -72,13 +72,15 @@ class PostulanteModel extends Model
     protected $afterDelete    = [];
 
     // Método para obtener postulantes con búsqueda
-    public function search($search)
+    public function search($term)
     {
         return $this->select('postulantes.*')
             ->groupStart()
-            ->like('apellido', $search)
-            ->orLike('nombre', $search)
-            ->orLike('dni', $search)
+            ->like('apellido', $term)
+            ->orLike('nombre', $term)
+            ->orLike('dni', $term)
+            ->orLike('titulo', $term)
+            ->orLike('domicilio', $term)
             ->groupEnd()
             ->orderBy('apellido', 'ASC')
             ->orderBy('nombre', 'ASC')

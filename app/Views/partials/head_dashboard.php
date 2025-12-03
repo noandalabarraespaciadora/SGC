@@ -125,4 +125,7 @@
       padding: 0.35em 0.65em;
     }
   </style>
+
+  <!-- Estilos personalizados de las vistas -->
+  <?= $this->renderSection('styles') ?>
 </head>
