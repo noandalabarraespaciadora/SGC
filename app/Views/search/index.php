@@ -256,6 +256,18 @@
         color: #721c24;
     }
 
+    /* Estilos para el link de la barra de progreso */
+    .document-progress-link {
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .document-progress-link:hover {
+        opacity: 0.8;
+    }
+
     .document-progress {
         background: #e9ecef;
         height: 6px;
@@ -592,11 +604,17 @@
                 const progressClass = `progress-${estadoDoc.estado}`;
 
                 statusHtml = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+
+                // URL para ver documentación (con parámetro para abrir la pestaña de documentos)
+                const docUrl = baseUrl + '/postulantes/' + item.id + '?tab=documentos';
+
                 progressHtml = `
-                    <div class="document-progress">
-                        <div class="progress-bar ${progressClass}" style="width: ${estadoDoc.progreso}%"></div>
-                    </div>
-                    <small class="text-muted">Vigencia: ${estadoDoc.progreso}%</small>
+                    <a href="${docUrl}" class="document-progress-link" title="Click para ver la documentación del postulante">
+                        <div class="document-progress">
+                            <div class="progress-bar ${progressClass}" style="width: ${estadoDoc.progreso}%"></div>
+                        </div>
+                        <small class="text-muted">Vigencia: ${estadoDoc.progreso}%</small>
+                    </a>
                 `;
 
                 // Calcular estado de estudios psicofísicos
@@ -622,8 +640,8 @@
                 baseUrl + '/docentes/' + item.id;
 
             const editUrl = item.tipo === 'postulante' ?
-                baseUrl + '/postulantes/edit/' + item.id :
-                baseUrl + '/docentes/edit/' + item.id;
+                baseUrl + '/postulantes/editar/' + item.id :
+                baseUrl + '/docentes/editar/' + item.id;
 
             const printUrl = item.tipo === 'postulante' ?
                 baseUrl + '/postulantes/print/' + item.id :

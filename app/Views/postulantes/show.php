@@ -333,3 +333,28 @@
 </style>
 
 <?php $this->endSection() ?>
+
+<?php $this->section('scripts') ?>
+<script>
+    $(document).ready(function() {
+        // Detectar si hay un parámetro 'tab' en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+
+        if (tabParam) {
+            // Desactivar la pestaña activa actual
+            $('.nav-link.active').removeClass('active');
+            $('.tab-pane.active').removeClass('show active');
+
+            // Activar la pestaña solicitada
+            const tabButton = $(`#${tabParam}-tab`);
+            const tabPane = $(`#${tabParam}`);
+
+            if (tabButton.length && tabPane.length) {
+                tabButton.addClass('active');
+                tabPane.addClass('show active');
+            }
+        }
+    });
+</script>
+<?php $this->endSection() ?>
