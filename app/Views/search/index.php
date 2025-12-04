@@ -392,6 +392,35 @@
             flex-direction: column;
         }
     }
+
+    /* Estilos para el badge de estudios psicofísicos */
+    .psicofisico-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .psicofisico-vigente {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .psicofisico-vencido {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .psicofisico-sin-datos {
+        background: #e2e3e5;
+        color: #383d41;
+        border: 1px solid #d6d8db;
+    }
 </style>
 <?php $this->endSection() ?>
 
@@ -541,6 +570,8 @@
             let progressHtml = '';
             let alertIndicator = '';
 
+            let psicofisicoHtml = '';
+
             if (item.tipo === 'postulante') {
                 // Calcular estado de documentación
                 const estadoDoc = calcularEstadoDocumentacion(item);
@@ -556,6 +587,15 @@
                         <div class="progress-bar ${progressClass}" style="width: ${estadoDoc.progreso}%"></div>
                     </div>
                     <small class="text-muted">Documentación al ${estadoDoc.progreso}%</small>
+                `;
+
+                // Calcular estado de estudios psicofísicos
+                const estadoPsicofisico = calcularEstadoPsicofisico(item.estudios_psicofisicos_fecha);
+                psicofisicoHtml = `
+                    <div class="psicofisico-badge ${estadoPsicofisico.clase}">
+                        <i class="fas ${estadoPsicofisico.icono} me-1"></i>
+                        ${estadoPsicofisico.texto}
+                    </div>
                 `;
 
                 // Indicador de alerta
@@ -598,6 +638,8 @@
                         </div>
                         
                         ${progressHtml}
+
+                        ${psicofisicoHtml}
                         
                         <div class="quick-actions">
                             <a href="${viewUrl}" class="action-btn view-btn">
@@ -644,6 +686,49 @@
                 estado: estado,
                 progreso: progreso
             };
+        }
+
+        // Calcular estado de estudios psicofísicos
+        function calcularEstadoPsicofisico(fechaEstudiosPsicofisicos) {
+            if (!fechaEstudiosPsicofisicos) {
+                return {
+                    clase: 'psicofisico-sin-datos',
+                    icono: 'fa-question-circle',
+                    texto: 'Estudios Psicofísicos: Sin datos'
+                };
+            }
+
+            // Parsear la fecha correctamente para evitar problemas de zona horaria
+            const partes = fechaEstudiosPsicofisicos.split('-');
+            const fechaDoc = new Date(partes[0], partes[1] - 1, partes[2]); // año, mes (0-indexed), día
+
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
+
+            const fechaVencimiento = new Date(fechaDoc);
+            fechaVencimiento.setDate(fechaVencimiento.getDate() + 730); // 2 años = 730 días
+
+            const diasRestantes = Math.ceil((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
+
+            // Formatear fecha manualmente para evitar problemas de zona horaria
+            const dia = String(fechaDoc.getDate()).padStart(2, '0');
+            const mes = String(fechaDoc.getMonth() + 1).padStart(2, '0');
+            const anio = fechaDoc.getFullYear();
+            const fechaFormateada = `${dia}/${mes}/${anio}`;
+
+            if (diasRestantes < 0) {
+                return {
+                    clase: 'psicofisico-vencido',
+                    icono: 'fa-times-circle',
+                    texto: `Estudios Psicofísicos Vencidos - Fecha: ${fechaFormateada}`
+                };
+            } else {
+                return {
+                    clase: 'psicofisico-vigente',
+                    icono: 'fa-check-circle',
+                    texto: `Estudios Psicofísicos Vigentes - Fecha: ${fechaFormateada}`
+                };
+            }
         }
 
         // Actualizar URL sin recargar la página
