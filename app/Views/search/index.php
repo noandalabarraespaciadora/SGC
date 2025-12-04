@@ -720,13 +720,13 @@
                 return {
                     clase: 'psicofisico-vencido',
                     icono: 'fa-times-circle',
-                    texto: `Estudios Psicofísicos Vencidos - Fecha: ${fechaFormateada}`
+                    texto: `Psicofísico Vencido: ${fechaFormateada}`
                 };
             } else {
                 return {
                     clase: 'psicofisico-vigente',
                     icono: 'fa-check-circle',
-                    texto: `Estudios Psicofísicos Vigentes - Fecha: ${fechaFormateada}`
+                    texto: `Psicofísico Vigente: ${fechaFormateada}`
                 };
             }
         }
