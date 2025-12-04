@@ -148,8 +148,8 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Teléfonos <span class="text-danger">*</span></label>
                             <div id="telefonos-container">
-                                <?php if (!empty($telefonos)): ?>
-                                    <?php foreach ($telefonos as $index => $telefono): ?>
+                                <?php if (!empty($postulante['telefonos'])): ?>
+                                    <?php foreach ($postulante['telefonos'] as $index => $telefono): ?>
                                         <div class="input-group mb-2 contacto-item">
                                             <input type="tel" class="form-control" name="telefonos[]"
                                                 value="<?= old("telefonos.{$index}", $telefono['numero']) ?>"
@@ -174,8 +174,8 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Emails <span class="text-danger">*</span></label>
                             <div id="emails-container">
-                                <?php if (!empty($emails)): ?>
-                                    <?php foreach ($emails as $index => $email): ?>
+                                <?php if (!empty($postulante['emails'])): ?>
+                                    <?php foreach ($postulante['emails'] as $index => $email): ?>
                                         <div class="input-group mb-2 contacto-item">
                                             <input type="email" class="form-control" name="emails[]"
                                                 value="<?= old("emails.{$index}", $email['direccion']) ?>"
@@ -948,6 +948,74 @@
             const phoneRegex = /^[\d\s\-\+\(\)]{6,20}$/;
             return phoneRegex.test(phone.replace(/\s/g, ''));
         }
+
+        // Validación del formulario antes de enviar
+        $('#postulanteForm').on('submit', function(e) {
+            // Verificar si el formulario HTML5 es válido
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Agregar clase de validación de Bootstrap
+                $(this).addClass('was-validated');
+
+                // Mostrar alerta
+                alert('Por favor, complete todos los campos obligatorios marcados con *');
+
+                // Encontrar el primer campo inválido y hacer scroll hasta él
+                const firstInvalid = $(this).find(':invalid').first();
+                if (firstInvalid.length) {
+                    // Activar la pestaña que contiene el campo inválido
+                    const tabPane = firstInvalid.closest('.tab-pane');
+                    if (tabPane.length) {
+                        const tabId = tabPane.attr('id');
+                        $(`button[data-bs-target="#${tabId}"]`).tab('show');
+                    }
+
+                    // Hacer scroll hasta el campo
+                    $('html, body').animate({
+                        scrollTop: firstInvalid.offset().top - 100
+                    }, 500);
+
+                    // Enfocar el campo
+                    firstInvalid.focus();
+                }
+
+                return false;
+            }
+
+            // Validar que haya al menos un teléfono y un email
+            const telefonosValidos = $('#telefonos-container input').filter(function() {
+                return $(this).val().trim() !== '';
+            }).length;
+
+            const emailsValidos = $('#emails-container input').filter(function() {
+                return $(this).val().trim() !== '';
+            }).length;
+
+            if (telefonosValidos === 0) {
+                e.preventDefault();
+                alert('Debe ingresar al menos un número de teléfono');
+                $('button[data-bs-target="#personal"]').tab('show');
+                $('#telefonos-container input:first').focus();
+                return false;
+            }
+
+            if (emailsValidos === 0) {
+                e.preventDefault();
+                alert('Debe ingresar al menos un email');
+                $('button[data-bs-target="#personal"]').tab('show');
+                $('#emails-container input:first').focus();
+                return false;
+            }
+
+            // Validar duplicados
+            if (!validarContactosDuplicados('telefono') || !validarContactosDuplicados('email')) {
+                e.preventDefault();
+                alert('Hay contactos duplicados. Por favor, revise los datos ingresados.');
+                return false;
+            }
+        });
     });
 </script>
 <?php $this->endSection() ?>
