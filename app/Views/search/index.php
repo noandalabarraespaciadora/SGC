@@ -594,11 +594,11 @@
                 // Determinar el texto según el estado
                 let statusText = '';
                 if (estadoDoc.progreso === 100) {
-                    statusText = 'Documentación Vigente';
+                    statusText = 'Vigente';
                 } else if (estadoDoc.progreso >= 75) {
-                    statusText = 'Documentación Parcialmente Vigente';
+                    statusText = 'Completar Documentación';
                 } else {
-                    statusText = 'Documentación Vencida';
+                    statusText = 'Vencida';
                 }
 
                 const progressClass = `progress-${estadoDoc.estado}`;
