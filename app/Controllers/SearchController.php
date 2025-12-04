@@ -174,7 +174,7 @@ class SearchController extends BaseController
         $progreso = round(($documentosVigentes / $documentosTotales) * 100);
 
         // Determinar estado según porcentaje
-        if ($progreso === 100) {
+        if ($progreso == 100) {
             $estado = 'completo';
         } elseif ($progreso >= 75) {
             $estado = 'incompleto';

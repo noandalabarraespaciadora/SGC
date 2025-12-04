@@ -364,6 +364,10 @@
         background: #ffc107;
     }
 
+    .alert-success {
+        background: #28a745;
+    }
+
     @keyframes pulse {
         0% {
             transform: scale(0.95);
@@ -568,9 +572,12 @@
                 profesion = item.titulo || 'Sin título';
             } else {
                 nombreCompleto = item.apellido_y_nombre || 'Sin nombre';
-                dni = 'Docente';
+                // Mostrar teléfono y email del docente
+                const telefono = item.telefonos && item.telefonos.length > 0 ? item.telefonos[0].numero : 'Sin teléfono';
+                const email = item.emails && item.emails.length > 0 ? item.emails[0].direccion : 'Sin email';
+                dni = telefono;
                 edad = '';
-                profesion = 'Docente';
+                profesion = email;
             }
 
             // Badge de tipo
@@ -631,6 +638,8 @@
                     alertIndicator = '<div class="alert-indicator"></div>';
                 } else if (estadoDoc.estado === 'incompleto') {
                     alertIndicator = '<div class="alert-indicator alert-warning"></div>';
+                } else if (estadoDoc.estado === 'completo') {
+                    alertIndicator = '<div class="alert-indicator alert-success"></div>';
                 }
             }
 
