@@ -247,13 +247,13 @@
     }
 
     .status-incompleto {
-        background: #f8d7da;
-        color: #721c24;
+        background: #fff3cd;
+        color: #856404;
     }
 
     .status-vencido {
-        background: #fff3cd;
-        color: #856404;
+        background: #f8d7da;
+        color: #721c24;
     }
 
     .document-progress {
@@ -569,15 +569,25 @@
             let statusHtml = '';
             let progressHtml = '';
             let alertIndicator = '';
-
             let psicofisicoHtml = '';
 
             if (item.tipo === 'postulante') {
-                // Calcular estado de documentación
-                const estadoDoc = calcularEstadoDocumentacion(item);
+                // Usar el estado de documentación calculado en el backend
+                const estadoDoc = item.estado_documentacion || {
+                    estado: 'sin-datos',
+                    progreso: 0
+                };
                 const statusClass = `status-${estadoDoc.estado}`;
-                const statusText = estadoDoc.estado === 'completo' ? 'Completa' :
-                    estadoDoc.estado === 'incompleto' ? 'Incompleta' : 'Vencida';
+
+                // Determinar el texto según el estado
+                let statusText = '';
+                if (estadoDoc.progreso === 100) {
+                    statusText = 'Documentación Vigente';
+                } else if (estadoDoc.progreso >= 75) {
+                    statusText = 'Documentación Parcialmente Vigente';
+                } else {
+                    statusText = 'Documentación Vencida';
+                }
 
                 const progressClass = `progress-${estadoDoc.estado}`;
 
@@ -586,7 +596,7 @@
                     <div class="document-progress">
                         <div class="progress-bar ${progressClass}" style="width: ${estadoDoc.progreso}%"></div>
                     </div>
-                    <small class="text-muted">Documentación al ${estadoDoc.progreso}%</small>
+                    <small class="text-muted">Vigencia: ${estadoDoc.progreso}%</small>
                 `;
 
                 // Calcular estado de estudios psicofísicos
@@ -655,37 +665,6 @@
                     </div>
                 </div>
             `;
-        }
-
-        // Calcular estado de documentación (simplificado)
-        function calcularEstadoDocumentacion(postulante) {
-            // Contar documentos completos
-            let documentosCompletos = 0;
-            let documentosTotales = 8; // Número fijo de documentos requeridos
-
-            // Verificar algunos documentos clave
-            if (postulante.d_foto_carnet) documentosCompletos++;
-            if (postulante.d_buena_conducta) documentosCompletos++;
-            if (postulante.d_antiguedad) documentosCompletos++;
-            if (postulante.d_matricula) documentosCompletos++;
-            if (postulante.d_redam) documentosCompletos++;
-            if (postulante.d_rupv) documentosCompletos++;
-            if (postulante.d_certificado_domicilio) documentosCompletos++;
-            if (postulante.d_informacion_sumaria) documentosCompletos++;
-
-            const progreso = Math.round((documentosCompletos / documentosTotales) * 100);
-
-            let estado = 'incompleto';
-            if (progreso === 100) {
-                estado = 'completo';
-            } else if (progreso <= 30) {
-                estado = 'vencido';
-            }
-
-            return {
-                estado: estado,
-                progreso: progreso
-            };
         }
 
         // Calcular estado de estudios psicofísicos

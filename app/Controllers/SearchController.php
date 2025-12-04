@@ -78,6 +78,10 @@ class SearchController extends BaseController
                 $postulante['emails'] = $this->postulanteModel->getEmails($postulante['id']);
                 $postulante['edad'] = $this->postulanteModel->calcularEdad($postulante['fecha_nacimiento']);
                 $postulante['tipo'] = 'postulante';
+
+                // Calcular estado de vigencia de documentación
+                $estadoDoc = $this->calcularEstadoVigenciaDocumentacion($postulante);
+                $postulante['estado_documentacion'] = $estadoDoc;
             }
         }
 
@@ -117,51 +121,71 @@ class SearchController extends BaseController
     }
 
     /**
-     * Calcula el estado de documentación de un postulante
+     * Calcula el estado de vigencia de la documentación de un postulante
      */
-    private function calcularEstadoDocumentacion($postulante)
+    private function calcularEstadoVigenciaDocumentacion($postulante)
     {
-        // Aquí implementas la lógica para determinar el estado
-        // Basado en los campos d_* (documentos)
-
-        $documentosCompletos = 0;
+        $documentosVigentes = 0;
         $documentosTotales = 0;
 
-        // Verificar documentos básicos (ejemplo)
-        $camposDocumentos = [
-            'd_foto_carnet',
-            'd_buena_conducta',
-            'd_antiguedad',
-            'd_matricula',
-            'd_redam',
-            'd_rupv',
-            'd_certificado_domicilio',
-            'd_informacion_sumaria'
+        // Definir documentos con sus días de vigencia
+        $documentos = [
+            'd_foto_carnet' => null, // booleano
+            'd_buena_conducta' => 10,
+            'd_antiguedad' => 180,
+            'd_sanciones' => 180,
+            'd_matricula' => null, // booleano
+            'd_redam' => 60,
+            'd_rupv' => 60,
+            'psicofisico' => 180,
+            'd_certificado_domicilio' => 10,
+            'd_informacion_sumaria' => 365
         ];
 
-        foreach ($camposDocumentos as $campo) {
+        $hoy = new \DateTime();
+
+        foreach ($documentos as $campo => $diasVigencia) {
             $documentosTotales++;
-            if (!empty($postulante[$campo])) {
-                $documentosCompletos++;
+
+            if ($diasVigencia === null) {
+                // Documento booleano (checkbox)
+                if (!empty($postulante[$campo])) {
+                    $documentosVigentes++;
+                }
+            } else {
+                // Documento con fecha
+                if (!empty($postulante[$campo])) {
+                    $fechaDoc = new \DateTime($postulante[$campo]);
+                    $fechaVencimiento = clone $fechaDoc;
+                    $fechaVencimiento->modify("+{$diasVigencia} days");
+
+                    // Si está vigente, contar
+                    if ($fechaVencimiento >= $hoy) {
+                        $documentosVigentes++;
+                    }
+                }
             }
         }
 
-        if ($documentosTotales === 0) return ['estado' => 'sin-datos', 'progreso' => 0];
+        if ($documentosTotales === 0) {
+            return ['estado' => 'sin-datos', 'progreso' => 0];
+        }
 
-        $progreso = round(($documentosCompletos / $documentosTotales) * 100);
+        $progreso = round(($documentosVigentes / $documentosTotales) * 100);
 
+        // Determinar estado según porcentaje
         if ($progreso === 100) {
             $estado = 'completo';
-        } elseif ($progreso >= 70) {
+        } elseif ($progreso >= 75) {
             $estado = 'incompleto';
         } else {
-            $estado = 'vencido'; // O 'incompleto-severo'
+            $estado = 'vencido';
         }
 
         return [
             'estado' => $estado,
             'progreso' => $progreso,
-            'completos' => $documentosCompletos,
+            'vigentes' => $documentosVigentes,
             'totales' => $documentosTotales
         ];
     }
