@@ -1004,6 +1004,8 @@ $this->extend('layouts/main'); ?>
                     if (rotacion && rotacion.personal) {
                         rotacion.personal.forEach(persona => {
                             contenido += generarItemPersonal(persona, fecha, true);
+                            // Agregar hidden input para que se envíe en el formulario
+                            contenido += `<input type="hidden" name="personal_ids[]" value="${persona.id}">`;
                         });
                     }
 

@@ -188,9 +188,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('guardar', 'RotacionController::guardar');
         $routes->get('eliminar/(:any)', 'RotacionController::eliminar/$1');
 
-        // // APIs
-        // $routes->get('api/rotacion/(:any)', 'RotacionController::apiGetPorFecha/$1');
-        // $routes->get('api/personal', 'RotacionController::apiGetPersonal');
+        // APIs
+        $routes->get('api/rotacion/(:any)', 'RotacionController::apiGetPorFecha/$1');
+        $routes->get('api/personal', 'RotacionController::apiGetPersonal');
 
         // Gestión de Personal
         $routes->get('personal', 'RotacionController::personal');
