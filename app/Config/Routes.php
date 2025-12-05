@@ -188,18 +188,18 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('guardar', 'RotacionController::guardar');
         $routes->get('eliminar/(:any)', 'RotacionController::eliminar/$1');
 
-        // APIs
-        $routes->get('api/rotacion/(:any)', 'RotacionController::apiGetPorFecha/$1');
-        $routes->get('api/personal', 'RotacionController::apiGetPersonal');
+        // // APIs
+        // $routes->get('api/rotacion/(:any)', 'RotacionController::apiGetPorFecha/$1');
+        // $routes->get('api/personal', 'RotacionController::apiGetPersonal');
 
         // Gestión de Personal
         $routes->get('personal', 'RotacionController::personal');
         $routes->post('personal/guardar', 'RotacionController::guardarPersonal');
-        $routes->get('personal/eliminar/(:num)', 'RotacionController::eliminarPersonal/$1');
+        $routes->post('personal/eliminar/(:num)', 'RotacionController::eliminarPersonal/$1');
 
         // Gestión de Tipos de Día
         $routes->get('tipos-dia', 'RotacionController::tiposDia');
         $routes->post('tipos-dia/guardar', 'RotacionController::guardarTipoDia');
-        $routes->get('tipos-dia/eliminar/(:num)', 'RotacionController::eliminarTipoDia/$1');
+        $routes->post('tipos-dia/eliminar/(:num)', 'RotacionController::eliminarTipoDia/$1');
     });
 });
