@@ -39,13 +39,13 @@ class RotacionTipoDiaModel extends Model
     // Validación
     protected $validationRules = [
         'nombre' => 'required|min_length[2]|max_length[100]|is_unique[rotacion_tipos_dia.nombre,id,{id}]',
-        'color' => 'required|valid_color',
+        'color' => 'required|regex_match[/^#[a-fA-F0-9]{6}$/]',
         'requiere_acuerdo' => 'permit_empty|in_list[0,1]',
     ];
 
     protected $validationMessages = [
         'color' => [
-            'valid_color' => 'El color debe ser un código hexadecimal válido (ej: #FF0000)'
+            'regex_match' => 'El color debe ser un código hexadecimal válido (ej: #FF0000)'
         ]
     ];
 

@@ -28,6 +28,13 @@ $this->extend('layouts/main'); ?>
                 </div>
             <?php endif; ?>
 
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <!-- Listado -->
             <div class="row" id="tiposDiaList">
                 <?php foreach ($tipos_dia as $tipo): ?>
@@ -144,6 +151,8 @@ $this->extend('layouts/main'); ?>
 
 <?php $this->section('scripts'); ?>
 <script>
+    const tiposDia = <?= json_encode($tipos_dia) ?>;
+
     // Sincronizar inputs de color
     $('#tipoColor').on('input', function() {
         $('#tipoColorHex').val(this.value);
@@ -156,8 +165,23 @@ $this->extend('layouts/main'); ?>
     });
 
     function editarTipo(id) {
-        // Aquí cargaríamos los datos del tipo vía AJAX
-        alert('Funcionalidad de edición en desarrollo');
+        const tipo = tiposDia.find(t => t.id == id);
+
+        if (tipo) {
+            $('#tipoId').val(tipo.id);
+            $('#tipoNombre').val(tipo.nombre);
+            $('#tipoColor').val(tipo.color);
+            $('#tipoColorHex').val(tipo.color);
+            $('#tipoDescripcion').val(tipo.descripcion || '');
+            $('#tipoRequiereAcuerdo').prop('checked', tipo.requiere_acuerdo == 1);
+            $('#tipoActivo').prop('checked', tipo.activo == 1);
+
+            $('.modal-title').text('Editar Tipo de Día');
+
+            // Abrir modal
+            const modal = new bootstrap.Modal(document.getElementById('modalNuevoTipo'));
+            modal.show();
+        }
     }
 
     function eliminarTipo(id, nombre) {
@@ -169,8 +193,8 @@ $this->extend('layouts/main'); ?>
     }
 
     $(document).ready(function() {
-        // Limpiar formulario al abrir modal
-        $('#modalNuevoTipo').on('show.bs.modal', function() {
+        // Limpiar formulario al cerrar modal
+        $('#modalNuevoTipo').on('hidden.bs.modal', function() {
             $('#formTipo')[0].reset();
             $('#tipoId').val('');
             $('#tipoColor').val('#007bff');
