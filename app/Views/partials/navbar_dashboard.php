@@ -40,6 +40,9 @@
             <a href="<?= base_url('biblioteca') ?>" class="nav-link">📚 Biblioteca</a>
             <a href="<?= base_url('concursos') ?>" class="nav-link">🏆 Concursos</a>
             <a href="<?= base_url('unificados') ?>" class="nav-link"> 🔗 Unificados</a>
+            <a href="<?= base_url('rotacion') ?>" class="nav-link"> 𖦹 Rotaciones</a>
+            <a href="<?= base_url('rotacion/personal') ?>" class="nav-link"> 📊 Personal</a>
+            <a href="<?= base_url('rotacion/tipos-dia') ?>" class="nav-link"> 📊 Tipos de Día</a>
           </nav>
         </li>
         <li class="nav-item">
