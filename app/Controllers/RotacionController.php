@@ -346,11 +346,16 @@ class RotacionController extends BaseController
         try {
             if ($id) {
                 // Actualizar
-                $this->tipoDiaModel->update($id, $data);
+                $data['id'] = $id; // Necesario para la validación is_unique
+                if (!$this->tipoDiaModel->update($id, $data)) {
+                    return redirect()->back()->withInput()->with('error', 'Error al actualizar el tipo de día.')->with('errors', $this->tipoDiaModel->errors());
+                }
                 $mensaje = 'Tipo de día actualizado correctamente.';
             } else {
                 // Crear nuevo
-                $this->tipoDiaModel->insert($data);
+                if (!$this->tipoDiaModel->insert($data)) {
+                    return redirect()->back()->withInput()->with('error', 'Error al crear el tipo de día.')->with('errors', $this->tipoDiaModel->errors());
+                }
                 $mensaje = 'Tipo de día agregado correctamente.';
             }
 
