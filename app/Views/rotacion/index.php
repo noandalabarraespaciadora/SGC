@@ -1060,9 +1060,48 @@ $this->extend('layouts/main'); ?>
             }
         }
 
+        function generarItemPersonal(persona, fecha, mostrarEliminar = false) {
+            const iniciales = (persona.nombre?.charAt(0) || '') + (persona.apellido?.charAt(0) || '');
+            const avatarColor = persona.color_avatar || generarColorAvatar(persona.nombre + ' ' + persona.apellido);
+
+            const avatarHtml = persona.url_foto ?
+                `<img src="<?= base_url() ?>${persona.url_foto}" alt="Foto" class="personal-avatar">` :
+                `<div class="personal-avatar d-flex align-items-center justify-content-center" style="background-color: ${avatarColor}; color: white;">
+                ${iniciales}
+              </div>`;
+
+            const acciones = mostrarEliminar ?
+                `<div class="personal-actions">
+                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarPersonalDelModal('${fecha}', ${persona.id})">
+                      <i class="fas fa-times"></i>
+                  </button>
+               </div>` :
+                '';
+
+            return `
+            <div class="personal-item">
+                ${avatarHtml}
+                <div class="personal-info">
+                    <div class="personal-name">${persona.nombre} ${persona.apellido}</div>
+                    <div class="personal-type">
+                        <span class="badge ${persona.categoria === 'jerarquico' ? 'bg-primary' : 'bg-secondary'}">
+                            ${persona.categoria === 'jerarquico' ? 'Jerárquico' : 'No Jerárquico'}
+                        </span>
+                        ${persona.area ? `<span class="ms-1">• ${persona.area}</span>` : ''}
+                    </div>
+                </div>
+                ${acciones}
+            </div>
+        `;
+        }
+
+
         function agregarPersonalDia(fecha) {
+            console.log('agregarPersonalDia llamada con fecha:', fecha);
             const select = document.getElementById('agregarPersonalSelect');
+            console.log('Select element:', select);
             const personaId = parseInt(select.value);
+            console.log('PersonaId seleccionado:', personaId);
 
             if (!personaId) {
                 alert('Seleccione una persona para agregar');
@@ -1070,20 +1109,27 @@ $this->extend('layouts/main'); ?>
             }
 
             const persona = personal.find(p => p.id === personaId);
-            if (!persona) return;
+            console.log('Persona encontrada:', persona);
+            if (!persona) {
+                console.error('No se encontró la persona con id:', personaId);
+                return;
+            }
 
             // Agregar al HTML
             const personaHtml = generarItemPersonal(persona, fecha, true);
+            console.log('HTML generado:', personaHtml);
             $('#editarPersonalList').append(personaHtml);
 
-            // Agregar checkbox oculto al formulario
-            $('#formEditarDia').append(`<input type="hidden" name="personal_ids[]" value="${personaId}">`);
+            // Agregar hidden input dentro del mismo contenedor
+            $('#editarPersonalList').append(`<input type="hidden" name="personal_ids[]" value="${personaId}">`);
+            console.log('Hidden input agregado para personaId:', personaId);
 
             // Resetear select
             select.value = '';
 
             // Remover del select de opciones
             $(select).find(`option[value="${personaId}"]`).remove();
+            console.log('Persona agregada exitosamente');
         }
 
         function eliminarPersonalDelModal(fecha, personaId) {
