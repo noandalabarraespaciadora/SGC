@@ -1145,17 +1145,27 @@ $this->extend('layouts/main'); ?>
         }
 
         function eliminarPersonalDelModal(fecha, personaId) {
-            // Buscar el item en el listado y eliminarlo
-            $(`.personal-item:has(button[onclick*="${personaId}"])`).remove();
+            console.log('Eliminando persona con ID:', personaId);
+
+            // Buscar y eliminar el item específico usando un selector más preciso
+            $(`#editarPersonalList .personal-item`).each(function() {
+                const button = $(this).find('button[onclick*="eliminarPersonalDelModal"]');
+                if (button.length && button.attr('onclick').includes(`${personaId})`)) {
+                    $(this).remove();
+                    console.log('Item visual eliminado');
+                }
+            });
 
             // Remover el input hidden correspondiente
-            $(`#formEditarDia input[name="personal_ids[]"][value="${personaId}"]`).remove();
+            $(`#editarPersonalList input[name="personal_ids[]"][value="${personaId}"]`).remove();
+            console.log('Hidden input eliminado');
 
             // Agregar de nuevo al select de opciones
-            const persona = personal.find(p => p.id === personaId);
+            const persona = personal.find(p => p.id == personaId); // Usar == para comparar string con number
             if (persona) {
                 const option = `<option value="${persona.id}">${persona.nombre} ${persona.apellido} - ${persona.categoria === 'jerarquico' ? 'Jerárquico' : 'No Jerárquico'}</option>`;
                 $('#agregarPersonalSelect').append(option);
+                console.log('Persona agregada de nuevo al select');
             }
         }
 
