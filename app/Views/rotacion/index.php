@@ -729,7 +729,7 @@ $this->extend('layouts/main'); ?>
         }
 
         function generarDiaSemanal(fecha) {
-            const fechaStr = fecha.toISOString().split('T')[0];
+            const fechaStr = formatearFecha(fecha); // Usar formatearFecha en lugar de toISOString
             const rotacion = rotaciones.find(r => r.fecha === fechaStr);
             const esHoy = esMismaFecha(fecha, new Date());
 
@@ -853,7 +853,7 @@ $this->extend('layouts/main'); ?>
         }
 
         function generarDiaMensual(fecha) {
-            const fechaStr = fecha.toISOString().split('T')[0];
+            const fechaStr = formatearFecha(fecha); // Usar formatearFecha en lugar de toISOString
             const rotacion = rotaciones.find(r => r.fecha === fechaStr);
             const esMesActual = fecha.getMonth() === new Date(fechaActual).getMonth();
             const esFinSemana = fecha.getDay() === 0 || fecha.getDay() === 6;
@@ -958,6 +958,14 @@ $this->extend('layouts/main'); ?>
             return luminance > 0.5 ? '#000000' : '#FFFFFF';
         }
 
+        // Función para formatear fecha sin problemas de zona horaria
+        function formatearFecha(fecha) {
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, '0');
+            const day = String(fecha.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // Funciones de edición
         async function editarDia(fecha) {
             try {
@@ -966,10 +974,12 @@ $this->extend('layouts/main'); ?>
 
                 if (result.success) {
                     const rotacion = result.data;
-                    const fechaObj = new Date(fecha);
+                    // Agregar tiempo para evitar problemas de zona horaria
+                    const fechaObj = new Date(fecha + 'T12:00:00');
 
                     let contenido = `
                     <input type="hidden" name="fecha" value="${fecha}">
+                    <input type="hidden" name="view" value="${vistaActual}">
                     <h6>${fechaObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h6>
                     
                     <div class="mb-3">
