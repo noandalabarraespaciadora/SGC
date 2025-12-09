@@ -123,8 +123,8 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <strong>Teléfonos:</strong><br>
-                                <?php if (!empty($telefonos)): ?>
-                                    <?php foreach ($telefonos as $telefono): ?>
+                                <?php if (!empty($postulante['telefonos'])): ?>
+                                    <?php foreach ($postulante['telefonos'] as $telefono): ?>
                                         <span class="badge bg-primary me-1 mb-1"><?= esc($telefono['numero']) ?></span>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -133,8 +133,8 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <strong>Emails:</strong><br>
-                                <?php if (!empty($emails)): ?>
-                                    <?php foreach ($emails as $email): ?>
+                                <?php if (!empty($postulante['emails'])): ?>
+                                    <?php foreach ($postulante['emails'] as $email): ?>
                                         <span class="badge bg-success me-1 mb-1"><?= esc($email['direccion']) ?></span>
                                     <?php endforeach; ?>
                                 <?php else: ?>

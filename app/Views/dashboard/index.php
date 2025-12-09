@@ -39,7 +39,6 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
 <hr>
 
 <!-- ACCESO DIRECTO A MÓDULOS -->
-<h5 class="mb-3">Acceso Directo a Módulos</h5>
 <div class="row g-3 mb-4">
   <div class="col-6 col-md-4 col-lg-2">
     <a href="<?= base_url('buscar') ?>" class="card card-module h-100 text-center text-decoration-none shadow-sm hover-effect">
@@ -171,7 +170,7 @@ $formatterFecha->setPattern('dd \'de\' MMMM \'de\' yyyy');
       <div class="card-header d-flex justify-content-between align-items-center">
         <div>
           <h6 class="card-title fs-5 mb-1">📅 Actividades</h6>
-          <p class="text-muted small mb-0"><?= ucfirst($formatterFecha->format(new DateTime())) ?></p>
+          <!-- <p class="text-muted small mb-0"><?= ucfirst($formatterFecha->format(new DateTime())) ?></p> -->
         </div>
         <a href="<?= base_url('rotacion') ?>" class="btn btn-outline-primary btn-sm">
           <i class="fas fa-external-link-alt"></i>
