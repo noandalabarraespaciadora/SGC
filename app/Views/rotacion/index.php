@@ -140,6 +140,7 @@ $this->extend('layouts/main'); ?>
                 </div>
                 <form action="<?= base_url('rotacion/guardar') ?>" method="post" id="formAsignarPersonal">
                     <?= csrf_field() ?>
+                    <input type="hidden" name="view" value="<?= $view ?>">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -227,6 +228,7 @@ $this->extend('layouts/main'); ?>
                 </div>
                 <form action="<?= base_url('rotacion/guardar') ?>" method="post" id="formEditarDia">
                     <?= csrf_field() ?>
+                    <input type="hidden" name="view" value="<?= $view ?>">
                     <div class="modal-body" id="editarDiaContent">
                         <!-- Contenido dinámico -->
                     </div>

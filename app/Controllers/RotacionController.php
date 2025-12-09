@@ -127,7 +127,9 @@ class RotacionController extends BaseController
             // Asignar personal
             $this->rotacionModel->asignarPersonal($rotacionId, $personalIds);
 
-            return redirect()->to('/rotacion')->with('success', 'Rotación guardada correctamente.');
+            // Mantener la vista actual (semanal o mensual)
+            $view = $this->request->getGet('view') ?? 'semanal';
+            return redirect()->to('/rotacion?view=' . $view . '&fecha=' . $fecha)->with('success', 'Rotación guardada correctamente.');
         } catch (\Exception $e) {
             log_message('error', 'Error al guardar rotación: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Error al guardar la rotación: ' . $e->getMessage());
