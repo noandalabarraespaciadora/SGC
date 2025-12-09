@@ -38,6 +38,7 @@ class RotacionTipoDiaModel extends Model
 
     // Validación
     protected $validationRules = [
+        'id' => 'permit_empty|is_natural_no_zero',
         'nombre' => 'required|min_length[2]|max_length[100]|is_unique[rotacion_tipos_dia.nombre,id,{id}]',
         'color' => 'required|regex_match[/^#[a-fA-F0-9]{6}$/]',
         'requiere_acuerdo' => 'permit_empty|in_list[0,1]',
