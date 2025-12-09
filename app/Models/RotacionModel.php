@@ -103,7 +103,14 @@ class RotacionModel extends Model
      */
     public function getPorFecha($fecha)
     {
-        return $this->where('fecha', $fecha)->first();
+        $rotacion = $this->where('fecha', $fecha)->first();
+
+        if ($rotacion) {
+            // Cargar personal asignado
+            $rotacion['personal'] = $this->getPersonalPorRotacion($rotacion['id']);
+        }
+
+        return $rotacion;
     }
 
     /**
@@ -160,8 +167,9 @@ class RotacionModel extends Model
         $errors = [];
 
         // Verificar que la fecha no sea fin de semana
-        $diaSemana = date('w', strtotime($fecha));
-        if ($diaSemana == 0 || $diaSemana == 6) {
+        $fechaObj = new \DateTime($fecha);
+        $diaSemana = $fechaObj->format('N'); // 1 (lunes) a 7 (domingo)
+        if ($diaSemana == 6 || $diaSemana == 7) { // 6 = sábado, 7 = domingo
             $errors[] = 'No se pueden asignar rotaciones para fines de semana';
         }
 
