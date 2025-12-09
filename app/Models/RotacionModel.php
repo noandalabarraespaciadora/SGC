@@ -85,10 +85,17 @@ class RotacionModel extends Model
      */
     public function getPorRango($fechaInicio, $fechaFin)
     {
-        return $this->where('fecha >=', $fechaInicio)
+        $rotaciones = $this->where('fecha >=', $fechaInicio)
             ->where('fecha <=', $fechaFin)
             ->orderBy('fecha', 'ASC')
             ->findAll();
+
+        // Cargar personal para cada rotación
+        foreach ($rotaciones as &$rotacion) {
+            $rotacion['personal'] = $this->getPersonalPorRotacion($rotacion['id']);
+        }
+
+        return $rotaciones;
     }
 
     /**
@@ -97,6 +104,23 @@ class RotacionModel extends Model
     public function getPorFecha($fecha)
     {
         return $this->where('fecha', $fecha)->first();
+    }
+
+    /**
+     * Obtiene el personal asignado a una rotación específica
+     */
+    public function getPersonalPorRotacion($rotacionId)
+    {
+        $db = db_connect();
+        return $db->table('rotacion_detalles det')
+            ->select('per.*')
+            ->join('rotacion_personal per', 'per.id = det.personal_id')
+            ->where('det.rotacion_id', $rotacionId)
+            ->orderBy('per.categoria', 'DESC') // Jerárquicos primero
+            ->orderBy('per.apellido', 'ASC')
+            ->orderBy('per.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
     }
 
     /**

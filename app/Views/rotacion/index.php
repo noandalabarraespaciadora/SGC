@@ -1108,7 +1108,7 @@ $this->extend('layouts/main'); ?>
                 return;
             }
 
-            const persona = personal.find(p => p.id === personaId);
+            const persona = personal.find(p => p.id == personaId); // Usar == para comparar string con number
             console.log('Persona encontrada:', persona);
             if (!persona) {
                 console.error('No se encontró la persona con id:', personaId);
