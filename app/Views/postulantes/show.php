@@ -125,7 +125,7 @@
                                 <strong>Teléfonos:</strong><br>
                                 <?php if (!empty($postulante['telefonos'])): ?>
                                     <?php foreach ($postulante['telefonos'] as $telefono): ?>
-                                        <span class="badge bg-primary me-1 mb-1"><?= esc($telefono['numero']) ?></span>
+                                        <p><?= esc($telefono['numero']) ?></p>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <span class="text-muted">Sin teléfonos registrados</span>
@@ -135,7 +135,7 @@
                                 <strong>Emails:</strong><br>
                                 <?php if (!empty($postulante['emails'])): ?>
                                     <?php foreach ($postulante['emails'] as $email): ?>
-                                        <span class="badge bg-success me-1 mb-1"><?= esc($email['direccion']) ?></span>
+                                        <p><?= esc($email['direccion']) ?></p>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <span class="text-muted">Sin emails registrados</span>
